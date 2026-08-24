@@ -271,7 +271,7 @@
   .blank-correct{ background:#EEFAE2; color: var(--green-dark); border-bottom-color: var(--green); }
   .blank-wrong{ background:#FFEDED; color: var(--red-dark); border-bottom-color: var(--red); }
 
-  /* TILE / SPOTS PARA LETRAS (SISTEMA DE TECLADO) */
+  /* TECLADO E QUADRADOS CINZAS */
   .word-spelling-wrap{
     display: inline-flex;
     flex-wrap: wrap;
@@ -281,8 +281,8 @@
     margin: 0 4px;
   }
   .letter-box{
-    width: 28px;
-    height: 34px;
+    width: 32px;
+    height: 38px;
     background: #E5E5E5;
     border: 2px solid #CCC;
     border-radius: 8px;
@@ -291,14 +291,18 @@
     justify-content: center;
     font-family: 'Baloo 2', sans-serif;
     font-weight: 700;
-    font-size: 16px;
+    font-size: 17px;
     color: var(--text);
     text-transform: uppercase;
+    cursor: pointer;
+    user-select: none;
+    transition: all .1s ease;
   }
   .letter-box.space-box{
     width: 14px;
     background: transparent;
     border: none;
+    cursor: default;
   }
   .letter-box.filled{
     background: #EFF8FF;
@@ -326,9 +330,10 @@
   .key-btn{
     font-family: 'Baloo 2', sans-serif;
     font-weight: 700;
-    font-size: 16px;
-    width: 38px;
+    font-size: 17px;
+    min-width: 38px;
     height: 42px;
+    padding: 0 8px;
     background: #FFF;
     border: 2px solid var(--border);
     border-bottom-width: 4px;
@@ -339,11 +344,18 @@
     align-items: center;
     justify-content: center;
     text-transform: uppercase;
+    transition: all .1s ease;
   }
   .key-btn:active:not(:disabled){ transform: translateY(2px); }
-  .key-btn.space-key{ width: auto; padding: 0 16px; text-transform: none; font-size: 12px; }
-  .key-btn.back-key{ width: auto; padding: 0 12px; background: #FFF3F3; border-color: #FFCDCD; color: var(--red); }
-  .key-btn:disabled{ opacity: .4; cursor: default; }
+  .key-btn.space-key{ width: auto; padding: 0 16px; text-transform: none; font-size: 13px; }
+  .key-btn.used{
+    opacity: 0.25;
+    background: #E0E0E0;
+    border-color: #CCC;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
 
   @keyframes popIn{
     from{ opacity:0; transform: translateY(8px); }
@@ -559,7 +571,6 @@ const level3Data = [
     spelling2: "avec",
     frTemplate: "Lucas mange {SP1} le soir [ 2 ] ses amis.",
     frFull: "Lucas mange du brocoli le soir avec ses amis.",
-    l2Opts: ["avec", "sans", "pour"],
     transCorrect: "Lucas come brócolis à noite com seus amigos.",
     transWrong: ["Lucas come brócolis de manhã com seus amigos.", "Lucas cozinha brócolis à noite com seus amigos."]
   },
@@ -568,7 +579,6 @@ const level3Data = [
     spelling2: "soupe",
     frTemplate: "Elle prépare {SP1} pour la [ 2 ].",
     frFull: "Elle prépare de la carotte pour la soupe.",
-    l2Opts: ["soupe", "salade", "table"],
     transCorrect: "Ela prepara cenoura para a sopa.",
     transWrong: ["Ela compra cenoura para a sopa.", "Ela prepara cenoura para a salada."]
   },
@@ -577,7 +587,6 @@ const level3Data = [
     spelling2: "père",
     frTemplate: "Mon [ 2 ] met {SP1} dans le repas.",
     frFull: "Mon père met de l'ail dans le repas.",
-    l2Opts: ["père", "frère", "grand-père"],
     transCorrect: "Meu pai coloca alho na refeição.",
     transWrong: ["Meu irmão coloca alho na refeição.", "Meu pai corta alho na refeição."]
   },
@@ -586,7 +595,6 @@ const level3Data = [
     spelling2: "aujourd’hui",
     frTemplate: "Je préfère {SP1} au petit-déjeuner [ 2 ].",
     frFull: "Je préfère des pêches au petit-déjeuner aujourd’hui.",
-    l2Opts: ["aujourd’hui", "demain", "toujours"],
     transCorrect: "Eu prefiro pêssegos no café da manhã hoje.",
     transWrong: ["Eu como pêssegos no café da manhã amanhã.", "Eu prefiro morangos no café da manhã hoje."]
   },
@@ -595,7 +603,6 @@ const level3Data = [
     spelling2: "table",
     frTemplate: "Maman coupe {SP1} sur la [ 2 ].",
     frFull: "Maman coupe de la ciboulette sur la table.",
-    l2Opts: ["table", "chaise", "plaque"],
     transCorrect: "Mamãe corta cebolinha sobre a mesa.",
     transWrong: ["Mamãe lava cebolinha sobre a mesa.", "Mamãe corta cebolinha na cadeira."]
   },
@@ -604,7 +611,6 @@ const level3Data = [
     spelling2: "concombre",
     frTemplate: "Il goute de la tomate rouge avec [ 2 ].",
     frFull: "Il goute de la tomate rouge avec du concombre.",
-    l2Opts: ["du concombre", "du persil", "de l'ail"],
     transCorrect: "Ele experimenta tomate vermelho com pepino.",
     transWrong: ["Ele compra tomate vermelho com pepino.", "Ele experimenta tomate vermelho com alho."]
   },
@@ -613,7 +619,6 @@ const level3Data = [
     spelling2: "frère",
     frTemplate: "Mon [ 2 ] ajoute {SP1} dans la soupe.",
     frFull: "Mon frère ajoute de l'oignon dans la soupe.",
-    l2Opts: ["frère", "père", "oncle"],
     transCorrect: "Meu irmão adiciona cebola na sopa.",
     transWrong: ["Meu pai adiciona cebola na sopa.", "Meu irmão come cebola na sopa."]
   },
@@ -622,7 +627,6 @@ const level3Data = [
     spelling2: "cuisine",
     frTemplate: "Nous cuisons {SP1} dans la [ 2 ].",
     frFull: "Nous cuisons des pommes de terre dans la cuisine.",
-    l2Opts: ["cuisine", "maison", "chambre"],
     transCorrect: "Nós cozinhamos batatas na cozinha.",
     transWrong: ["Nós comemos batatas na cozinha.", "Nós cozinhamos batatas na sala."]
   },
@@ -631,7 +635,6 @@ const level3Data = [
     spelling2: "village",
     frTemplate: "Notre grand-père achète {SP1} au grand [ 2 ].",
     frFull: "Notre grand-père achète du chou-fleur au grand village.",
-    l2Opts: ["village", "marché", "jardin"],
     transCorrect: "Nosso avô compra couve-flor na grande vila.",
     transWrong: ["Nosso pai compra couve-flor na grande vila.", "Nosso avô cultiva couve-flor na grande vila."]
   },
@@ -640,7 +643,6 @@ const level3Data = [
     spelling2: "elle",
     frTemplate: "[ 2 ] prend {SP1} pour le petit-déjeuner.",
     frFull: "Elle prend de l'ananas pour le petit-déjeuner.",
-    l2Opts: ["Elle", "Il", "Marie"],
     transCorrect: "Ela come abacaxi no café da manhã.",
     transWrong: ["Ele come abacaxi no café da manhã.", "Ela prepara abacaxi no café da manhã."]
   }
@@ -678,6 +680,17 @@ function getRandomLetter(){
 function formatScore(n){
   const rounded = Math.round(n*10)/10;
   return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
+}
+
+/* HELPER PARA GERAR BANCO DE TECLAS COM IDs ÚNICOS */
+function buildKeyBank(targetStr){
+  let chars = targetStr.split('');
+  chars.push(getRandomLetter());
+  chars = shuffle(chars);
+  return chars.map((char, index) => ({
+    id: index,
+    char: char
+  }));
 }
 
 /* SONOPLASTIA */
@@ -1000,16 +1013,10 @@ function checkL1Translation(){
    ========================================================= */
 function setupLevel2Question(idx){
   const q = level2Data[idx];
-  
-  // Teclado com letras exatas da palavra + 1 letra aleatória
-  const target = q.targetSpelling;
-  let charArray = target.split('');
-  charArray.push(getRandomLetter());
-  
   state.l2 = {
     step: 'A',
-    typed: "",
-    keyboardKeys: shuffle(charArray),
+    selectedItems: [], // array de objetos { id, char }
+    keyBank: buildKeyBank(q.targetSpelling),
     l2Opts: shuffle(q.l2Opts),
     l2Selected: null,
     checkedA: false,
@@ -1019,22 +1026,32 @@ function setupLevel2Question(idx){
   };
 }
 
-function renderSpellingBoxes(target, typed, checked, isCorrect){
+// Função para renderizar os quadrados de montagem
+function renderSpellingBoxesInteractive(target, selectedItems, checked, isCorrect, levelNum, fieldNum){
   let html = '<span class="word-spelling-wrap">';
+  let itemIdx = 0;
+
   for(let i=0; i<target.length; i++){
     const charTarget = target[i];
-    const charTyped = typed[i] || "";
     
     if(charTarget === ' '){
       html += `<span class="letter-box space-box"></span>`;
     } else {
+      const selectedObj = selectedItems[itemIdx];
       let cls = "letter-box";
+      let displayChar = "";
+
       if(checked){
         cls += isCorrect ? " correct" : " wrong";
-      } else if(charTyped !== ""){
+        if(selectedObj) displayChar = selectedObj.char;
+      } else if(selectedObj){
         cls += " filled";
+        displayChar = selectedObj.char;
       }
-      html += `<span class="${cls}">${charTyped}</span>`;
+
+      const clickHandler = (!checked && selectedObj) ? `onclick="removeTile(${levelNum}, ${fieldNum}, ${itemIdx})"` : '';
+      html += `<span class="${cls}" ${clickHandler}>${displayChar}</span>`;
+      itemIdx++;
     }
   }
   html += '</span>';
@@ -1048,8 +1065,11 @@ function renderLevel2(){
 
   if(s.step==='A'){
     const target = q.targetSpelling;
-    const isSpellingOk = (s.typed.toLowerCase() === target.toLowerCase());
-    const spellingHtml = renderSpellingBoxes(target, s.typed, s.checkedA, isSpellingOk);
+    const typedString = s.selectedItems.map(item => item.char).join('');
+    const expectedLettersOnly = target.replace(/ /g, '');
+    const isSpellingOk = (typedString.toLowerCase() === expectedLettersOnly.toLowerCase());
+
+    const spellingHtml = renderSpellingBoxesInteractive(target, s.selectedItems, s.checkedA, isSpellingOk, 2, 1);
 
     // Render da frase com as lacunas
     let l2Span = "[ ___ ]";
@@ -1061,13 +1081,18 @@ function renderLevel2(){
 
     const sentence = q.frTemplate.replace('{SPELLING}', spellingHtml).replace('[ 2 ]', `<span class="${l2Cls}">${l2Span}</span>`);
 
-    // Botões do Teclado Letra por Letra
-    const keyBtns = s.keyboardKeys.map((char, i)=>{
-      if(char===' ') return `<button class="key-btn space-key" ${s.checkedA?'disabled':''} onclick="typeL2Char(' ')">espaço</button>`;
-      return `<button class="key-btn" ${s.checkedA?'disabled':''} onclick="typeL2Char('${char}')">${char}</button>`;
-    }).join('');
+    // Teclado com desativação visual dos itens usados
+    const keyBtns = s.keyBank.map((item) => {
+      const isUsed = s.selectedItems.some(sel => sel.id === item.id);
+      let cls = 'key-btn';
+      if(isUsed) cls += ' used';
+      if(item.char === ' ') cls += ' space-key';
 
-    const backspaceBtn = `<button class="key-btn back-key" ${s.checkedA?'disabled':''} onclick="backspaceL2()">⌫</button>`;
+      const clickHandler = (!s.checkedA && !isUsed) ? `onclick="pickTile(2, 1, ${item.id})"` : '';
+      const displayLabel = item.char === ' ' ? 'espaço' : item.char;
+
+      return `<button class="${cls}" ${s.checkedA || isUsed ? 'disabled' : ''} ${clickHandler}>${displayLabel}</button>`;
+    }).join('');
 
     // Botões de opção da lacuna 2
     const l2Btns = s.l2Opts.map((w,i)=>{
@@ -1079,7 +1104,7 @@ function renderLevel2(){
 
     const btnLabel = s.checkedA ? 'Continuar' : 'Verificar Respostas';
     const btnOnclick = s.checkedA ? 'advanceL2Step()' : 'checkL2StepA()';
-    const btnDisabled = !s.checkedA && (s.typed.length < target.length || s.l2Selected===null);
+    const btnDisabled = !s.checkedA && (s.selectedItems.length < expectedLettersOnly.length || s.l2Selected===null);
 
     content.innerHTML = `
       <div class="question-card">
@@ -1087,7 +1112,7 @@ function renderLevel2(){
         <p class="fr-sentence">${sentence}</p>
         
         <p class="chip-label">Teclado de Letras (Lacuna 1)</p>
-        <div class="keyboard-grid">${keyBtns}${backspaceBtn}</div>
+        <div class="keyboard-grid">${keyBtns}</div>
 
         <p class="chip-label">Opções da Lacuna 2</p>
         <div class="chip-row">${l2Btns}</div>
@@ -1119,23 +1144,6 @@ function renderLevel2(){
   }
 }
 
-function typeL2Char(char){
-  const q = level2Data[state.qIndex];
-  if(state.l2.typed.length < q.targetSpelling.length){
-    playSound('click');
-    state.l2.typed += char;
-    renderLevel2();
-  }
-}
-
-function backspaceL2(){
-  if(state.l2.typed.length > 0){
-    playSound('click');
-    state.l2.typed = state.l2.typed.slice(0, -1);
-    renderLevel2();
-  }
-}
-
 function selectL2Opt(i){ playSound('click'); state.l2.l2Selected=i; renderLevel2(); }
 
 function checkL2StepA(){
@@ -1143,7 +1151,9 @@ function checkL2StepA(){
   const s = state.l2;
   s.checkedA = true;
 
-  const isSpellOk = (s.typed.toLowerCase() === q.targetSpelling.toLowerCase());
+  const typedString = s.selectedItems.map(item => item.char).join('');
+  const expectedLettersOnly = q.targetSpelling.replace(/ /g, '');
+  const isSpellOk = (typedString.toLowerCase() === expectedLettersOnly.toLowerCase());
   const isL2Ok = (s.l2Opts[s.l2Selected] === q.l2Correct);
 
   let pts = 0;
@@ -1181,21 +1191,13 @@ function checkL2Translation(){
 function setupLevel3Question(idx){
   const q = level3Data[idx];
 
-  // Lacuna 1: targetSpelling1
-  let charArray1 = q.spelling1.split('');
-  charArray1.push(getRandomLetter());
-
-  // Lacuna 2: targetSpelling2
-  let charArray2 = q.spelling2.split('');
-  charArray2.push(getRandomLetter());
-
   state.l3 = {
     step: 'A',
     activeField: 1, // 1 ou 2
-    typed1: "",
-    typed2: "",
-    keys1: shuffle(charArray1),
-    keys2: shuffle(charArray2),
+    selectedItems1: [],
+    selectedItems2: [],
+    keyBank1: buildKeyBank(q.spelling1),
+    keyBank2: buildKeyBank(q.spelling2),
     checkedA: false,
     trOptions: shuffle([{text:q.transCorrect, correct:true}, ...q.transWrong.map(w=>({text:w, correct:false}))]),
     trSelected: null,
@@ -1209,30 +1211,41 @@ function renderLevel3(){
   const content = document.getElementById('content');
 
   if(s.step==='A'){
-    const isSpell1Ok = (s.typed1.toLowerCase() === q.spelling1.toLowerCase());
-    const isSpell2Ok = (s.typed2.toLowerCase() === q.spelling2.toLowerCase());
+    const typed1 = s.selectedItems1.map(i => i.char).join('');
+    const typed2 = s.selectedItems2.map(i => i.char).join('');
 
-    const sp1Html = renderSpellingBoxes(q.spelling1, s.typed1, s.checkedA, isSpell1Ok);
-    const sp2Html = renderSpellingBoxes(q.spelling2, s.typed2, s.checkedA, isSpell2Ok);
+    const expected1 = q.spelling1.replace(/ /g, '');
+    const expected2 = q.spelling2.replace(/ /g, '');
+
+    const isSpell1Ok = (typed1.toLowerCase() === expected1.toLowerCase());
+    const isSpell2Ok = (typed2.toLowerCase() === expected2.toLowerCase());
+
+    const sp1Html = renderSpellingBoxesInteractive(q.spelling1, s.selectedItems1, s.checkedA, isSpell1Ok, 3, 1);
+    const sp2Html = renderSpellingBoxesInteractive(q.spelling2, s.selectedItems2, s.checkedA, isSpell2Ok, 3, 2);
 
     const sentence = q.frTemplate.replace('{SP1}', sp1Html).replace('[ 2 ]', sp2Html);
 
-    // Seletor de campo ativo
     const active1Cls = s.activeField===1 ? 'selected' : '';
     const active2Cls = s.activeField===2 ? 'selected' : '';
 
-    const activeKeys = s.activeField===1 ? s.keys1 : s.keys2;
+    const currentBank = s.activeField===1 ? s.keyBank1 : s.keyBank2;
+    const currentSelected = s.activeField===1 ? s.selectedItems1 : s.selectedItems2;
 
-    const keyBtns = activeKeys.map((char, i)=>{
-      if(char===' ') return `<button class="key-btn space-key" ${s.checkedA?'disabled':''} onclick="typeL3Char(' ')">espaço</button>`;
-      return `<button class="key-btn" ${s.checkedA?'disabled':''} onclick="typeL3Char('${char}')">${char}</button>`;
+    const keyBtns = currentBank.map((item) => {
+      const isUsed = currentSelected.some(sel => sel.id === item.id);
+      let cls = 'key-btn';
+      if(isUsed) cls += ' used';
+      if(item.char === ' ') cls += ' space-key';
+
+      const clickHandler = (!s.checkedA && !isUsed) ? `onclick="pickTile(3, ${s.activeField}, ${item.id})"` : '';
+      const displayLabel = item.char === ' ' ? 'espaço' : item.char;
+
+      return `<button class="${cls}" ${s.checkedA || isUsed ? 'disabled' : ''} ${clickHandler}>${displayLabel}</button>`;
     }).join('');
-
-    const backspaceBtn = `<button class="key-btn back-key" ${s.checkedA?'disabled':''} onclick="backspaceL3()">⌫</button>`;
 
     const btnLabel = s.checkedA ? 'Continuar' : 'Verificar Frases';
     const btnOnclick = s.checkedA ? 'advanceL3Step()' : 'checkL3StepA()';
-    const btnDisabled = !s.checkedA && (s.typed1.length < q.spelling1.length || s.typed2.length < q.spelling2.length);
+    const btnDisabled = !s.checkedA && (s.selectedItems1.length < expected1.length || s.selectedItems2.length < expected2.length);
 
     content.innerHTML = `
       <div class="question-card">
@@ -1246,7 +1259,7 @@ function renderLevel3(){
         </div>
 
         <p class="chip-label">Teclado de Letras (Lacuna ${s.activeField})</p>
-        <div class="keyboard-grid">${keyBtns}${backspaceBtn}</div>
+        <div class="keyboard-grid">${keyBtns}</div>
       </div>
       <div class="footer-space"></div>
       <button class="btn btn-block" ${btnDisabled?'disabled':''} onclick="${btnOnclick}">${btnLabel}</button>
@@ -1281,36 +1294,46 @@ function switchL3Field(f){
   renderLevel3();
 }
 
-function typeL3Char(char){
-  const q = level3Data[state.qIndex];
-  const s = state.l3;
-  if(s.activeField === 1){
-    if(s.typed1.length < q.spelling1.length){
-      playSound('click');
-      s.typed1 += char;
-      renderLevel3();
+/* =========================================================
+   FUNÇÕES GERAIS DE INTERAÇÃO COM AS LETRAS DO TECLADO
+   ========================================================= */
+
+// Escolher uma letra do banco
+function pickTile(levelNum, fieldNum, itemId){
+  playSound('click');
+  if(levelNum === 2){
+    const s = state.l2;
+    const item = s.keyBank.find(k => k.id === itemId);
+    if(item && !s.selectedItems.some(i => i.id === itemId)){
+      s.selectedItems.push(item);
+      renderLevel2();
     }
-  } else {
-    if(s.typed2.length < q.spelling2.length){
-      playSound('click');
-      s.typed2 += char;
+  } else if(levelNum === 3){
+    const s = state.l3;
+    const bank = fieldNum === 1 ? s.keyBank1 : s.keyBank2;
+    const selectedList = fieldNum === 1 ? s.selectedItems1 : s.selectedItems2;
+    const item = bank.find(k => k.id === itemId);
+    if(item && !selectedList.some(i => i.id === itemId)){
+      selectedList.push(item);
       renderLevel3();
     }
   }
 }
 
-function backspaceL3(){
-  const s = state.l3;
-  if(s.activeField === 1){
-    if(s.typed1.length > 0){
-      playSound('click');
-      s.typed1 = s.typed1.slice(0, -1);
-      renderLevel3();
+// Remover uma letra clicando diretamente na caixa cinza (preserva a ordem das demais)
+function removeTile(levelNum, fieldNum, itemIndex){
+  playSound('click');
+  if(levelNum === 2){
+    const s = state.l2;
+    if(!s.checkedA){
+      s.selectedItems.splice(itemIndex, 1);
+      renderLevel2();
     }
-  } else {
-    if(s.typed2.length > 0){
-      playSound('click');
-      s.typed2 = s.typed2.slice(0, -1);
+  } else if(levelNum === 3){
+    const s = state.l3;
+    if(!s.checkedA){
+      const selectedList = fieldNum === 1 ? s.selectedItems1 : s.selectedItems2;
+      selectedList.splice(itemIndex, 1);
       renderLevel3();
     }
   }
@@ -1321,8 +1344,14 @@ function checkL3StepA(){
   const s = state.l3;
   s.checkedA = true;
 
-  const isOk1 = (s.typed1.toLowerCase() === q.spelling1.toLowerCase());
-  const isOk2 = (s.typed2.toLowerCase() === q.spelling2.toLowerCase());
+  const typed1 = s.selectedItems1.map(i => i.char).join('');
+  const typed2 = s.selectedItems2.map(i => i.char).join('');
+
+  const expected1 = q.spelling1.replace(/ /g, '');
+  const expected2 = q.spelling2.replace(/ /g, '');
+
+  const isOk1 = (typed1.toLowerCase() === expected1.toLowerCase());
+  const isOk2 = (typed2.toLowerCase() === expected2.toLowerCase());
 
   let pts = 0;
   if(isOk1) pts += 1.75;
@@ -1353,7 +1382,7 @@ function checkL3Translation(){
   renderLevel3();
 }
 
-// Inicialização automática
+// Inicialização
 window.onload = () => { render(); };
 </script>
 </body>
