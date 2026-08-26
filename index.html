@@ -142,36 +142,44 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, collection, doc, setDoc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { getDatabase, ref, set, get, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
   const firebaseConfig = {
-    apiKey: "SUA_API_KEY",
-    authDomain: "SEU_PROJECT.firebaseapp.com",
-    projectId: "SEU_PROJECT_ID",
-    storageBucket: "SEU_PROJECT.appspot.com",
-    messagingSenderId: "SEU_SENDER_ID",
-    appId: "SEU_APP_ID"
+    apiKey: "AIzaSyAmD5ectyea8zeTkLurr0O2JjvV_t5jTWE",
+    authDomain: "les-legumes.firebaseapp.com",
+    databaseURL: "https://les-legumes-default-rtdb.firebaseio.com",
+    projectId: "les-legumes",
+    storageBucket: "les-legumes.firebasestorage.app",
+    messagingSenderId: "116016913711",
+    appId: "1:116016913711:web:97dea10d15e6ae760895da",
+    measurementId: "G-BVZKHK3H61"
   };
 
   const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+  const db = getDatabase(app);
 
   window.dbSaveScore = async function(playerData) {
     try {
-      const userRef = doc(db, "leaderboard", playerData.id);
-      await setDoc(userRef, playerData, { merge: true });
-    } catch(e) { console.error("Erro ao salvar Firestore:", e); }
+      await set(ref(db, 'leaderboard/' + playerData.id), playerData);
+    } catch(e) {
+      console.error("Erro ao salvar no Realtime Database:", e);
+    }
   };
 
   window.dbFetchTop10 = async function() {
     try {
-      const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), limit(10));
-      const querySnapshot = await getDocs(q);
-      const list = [];
-      querySnapshot.forEach((doc) => list.push(doc.data()));
-      return list;
+      const topQuery = query(ref(db, 'leaderboard'), orderByChild('score'), limitToLast(10));
+      const snapshot = await get(topQuery);
+      if (snapshot.exists()) {
+        const list = [];
+        snapshot.forEach((childSnapshot) => {
+          list.push(childSnapshot.val());
+        });
+        return list.reverse();
+      }
+      return [];
     } catch(e) {
-      console.error("Erro ao buscar Firestore:", e);
+      console.error("Erro ao buscar no Realtime Database:", e);
       return [];
     }
   };
@@ -211,8 +219,8 @@ const level2Data = [
 ];
 
 const state = {
-  screen: 'login', // NOVO: Inicia na tela de login por PIN/QR
-  loginMode: 'pin', // 'pin' ou 'qr'
+  screen: 'login',
+  loginMode: 'pin',
   studentPin: '',
   playerName: '',
   selectedChar: 'AGNÈS',
@@ -274,7 +282,7 @@ function submitStudentLogin(pinCode){
   stopQrScanner();
   state.studentPin = pin;
   state.playerId = 'student_' + pin;
-  state.screen = 'home'; // Avança para personalização do personagem
+  state.screen = 'home';
   render();
 }
 
