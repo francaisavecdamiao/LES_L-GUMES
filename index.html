@@ -7,8 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/html5-qrcode"></script>
-
 <style>
   :root{
     --green: #58CC02;
@@ -30,107 +28,343 @@
   }
 
   *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html,body{ margin:0; padding:0; background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; min-height: 100vh; }
-  h1,h2,h3{ font-family:'Baloo 2', sans-serif; margin:0; }
 
-  #page{ max-width: 480px; margin: 0 auto; min-height: 100vh; background: var(--bg); display:flex; flex-direction: column; box-shadow: 0 0 40px rgba(0,0,0,0.06); }
+  html,body{
+    margin:0; padding:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+  }
+
+  h1,h2{ font-family:'Baloo 2', sans-serif; margin:0; }
+
+  #page{
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--bg);
+    display:flex;
+    flex-direction: column;
+    box-shadow: 0 0 40px rgba(0,0,0,0.06);
+  }
 
   /* TOPBAR */
-  #topbar{ position: sticky; top:0; z-index: 10; background: var(--card); border-bottom: 2px solid var(--border); padding: 10px 16px 12px; }
-  .topbar-row{ display:flex; align-items:center; justify-content: space-between; gap:10px; margin-bottom:8px; }
-  .level-label{ font-family:'Baloo 2', sans-serif; font-weight:700; font-size: 15px; color: var(--text); white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
-  .score-badge{ font-family:'Baloo 2', sans-serif; font-weight:700; font-size: 15px; background: #FFF8E1; color:#B8860B; border: 2px solid var(--gold); border-radius: 999px; padding: 4px 12px; white-space: nowrap; flex-shrink:0; }
+  #topbar{
+    position: sticky;
+    top:0;
+    z-index: 10;
+    background: var(--card);
+    border-bottom: 2px solid var(--border);
+    padding: 10px 16px 12px;
+  }
+  .topbar-row{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    gap:10px;
+    margin-bottom:8px;
+  }
+  .level-label{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size: 15px;
+    color: var(--text);
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow: ellipsis;
+  }
+  .score-badge{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size: 15px;
+    background: #FFF8E1;
+    color:#B8860B;
+    border: 2px solid var(--gold);
+    border-radius: 999px;
+    padding: 4px 12px;
+    white-space: nowrap;
+    flex-shrink:0;
+  }
   .score-max{ font-weight:600; opacity:.7; font-size:12px; }
-  .progress-track{ background: #E5E5E5; border-radius: 999px; height: 12px; overflow:hidden; }
-  .progress-fill{ height:100%; background: linear-gradient(90deg, var(--green), #7ED321); border-radius: 999px; transition: width .4s ease; }
+  .progress-track{
+    background: #E5E5E5;
+    border-radius: 999px;
+    height: 12px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background: linear-gradient(90deg, var(--green), #7ED321);
+    border-radius: 999px;
+    transition: width .4s ease;
+  }
 
   /* LAYOUT */
-  main#content{ flex:1; padding: 20px 16px 12px; display:flex; flex-direction:column; gap:16px; }
+  main#content{
+    flex:1;
+    padding: 20px 16px 12px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
 
   .btn{
-    font-family:'Baloo 2', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: .3px; text-transform: uppercase;
-    border: none; border-radius: 16px; padding: 15px 20px; cursor: pointer; color: #fff; background: var(--green);
-    box-shadow: 0 4px 0 var(--green-dark); transition: transform .05s ease, box-shadow .05s ease, opacity .2s ease;
+    font-family:'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 16px;
+    padding: 15px 20px;
+    cursor: pointer;
+    color: #fff;
+    background: var(--green);
+    box-shadow: 0 4px 0 var(--green-dark);
+    transition: transform .05s ease, box-shadow .05s ease, opacity .2s ease;
   }
   .btn:active:not(:disabled){ transform: translateY(4px); box-shadow: 0 0 0 var(--green-dark); }
   .btn:disabled{ opacity:.45; cursor:not-allowed; }
-  .btn-blue{ background: var(--blue); box-shadow: 0 4px 0 var(--blue-dark); }
-  .btn-blue:active:not(:disabled){ box-shadow: 0 0 0 var(--blue-dark); }
-  .btn-block{ width:100%; margin-top:auto; position: sticky; bottom: 16px; z-index: 5; }
+  .btn-block{ width:100%; margin-top:auto; position: sticky; bottom: 16px; }
 
   .footer-space{ flex:1; }
 
-  /* CARDS E ENTRADA */
-  .home-card{ background: var(--card); border: 2px solid var(--border); border-radius: var(--radius-lg); padding: 24px 18px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px; animation: popIn .35s ease; }
-  .input-name, .input-pin{ width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: var(--radius-md); font-family: 'Baloo 2', sans-serif; font-size: 20px; text-align: center; outline: none; }
-  .input-pin{ letter-spacing: 4px; font-size: 24px; }
-  .input-name:focus, .input-pin:focus{ border-color: var(--blue); }
+  /* HOME / LEVEL / FINAL */
+  .home-card{
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px 22px;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    animation: popIn .35s ease;
+  }
+  .mascot{ font-size: 56px; line-height:1; margin-bottom:4px; }
+  .home-card h1{ font-size: 24px; color: var(--text); }
+  .home-sub{ font-size:15px; color: var(--text-light); margin:0; line-height:1.5; }
+  .level-preview{ width:100%; display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+  .level-chip{
+    display:flex; align-items:center; gap:10px;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    font-weight:700;
+    font-size:14px;
+    text-align:left;
+  }
+  .chip-num{
+    background: var(--blue);
+    color:#fff;
+    width:26px;height:26px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Baloo 2', sans-serif;
+    flex-shrink:0;
+  }
+  .chip-pts{ margin-left:auto; color: var(--gold-dark); font-family:'Baloo 2', sans-serif; }
 
-  .qr-reader-box{ width: 100%; max-width: 300px; border-radius: var(--radius-md); overflow: hidden; border: 2px solid var(--blue); margin-top: 10px; }
+  .final-score{
+    font-family:'Baloo 2', sans-serif;
+    font-size: 44px;
+    font-weight: 800;
+    color: var(--green-dark);
+    margin: 4px 0;
+  }
+  .final-score span{ font-size:18px; color: var(--text-light); font-weight:700; }
+  .breakdown{ width:100%; margin-top:12px; display:flex; flex-direction:column; gap:8px; }
+  .breakdown-row{
+    display:flex; justify-content:space-between;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-weight:700;
+    font-size:14px;
+  }
 
-  .tab-row{ display: flex; gap: 8px; width: 100%; margin-bottom: 8px; }
-  .tab-btn{ flex: 1; padding: 10px; font-family: 'Baloo 2', sans-serif; font-weight: 700; border: 2px solid var(--border); border-radius: var(--radius-sm); background: #fff; cursor: pointer; }
-  .tab-btn.active{ border-color: var(--blue); background: #EFF8FF; color: var(--blue-dark); }
-
-  .char-grid{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-height: 220px; overflow-y: auto; padding: 4px; }
-  .char-card{ border: 2px solid var(--border); border-radius: var(--radius-md); padding: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all .2s ease; }
-  .char-card img{ width: 48px; height: 48px; object-fit: contain; }
-  .char-card.selected{ border-color: var(--blue); background: #EFF8FF; }
-  .char-name{ font-size: 12px; font-weight: 700; text-transform: uppercase; }
-
-  .skin-selector{ display: flex; gap: 10px; margin-top: 4px; }
-  .skin-btn{ border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 6px; cursor: pointer; background: #fff; }
-  .skin-btn.selected{ border-color: var(--green); background: #EEFAE2; }
-  .skin-btn img{ width: 40px; height: 40px; }
-
-  /* GAMEPLAY & QUESTÕES */
-  .question-card{ background: var(--card); border: 2px solid var(--border); border-radius: var(--radius-lg); padding: 20px; text-align: center; animation: popIn .3s ease; }
-  .instruction{ font-size:13px; text-transform: uppercase; letter-spacing: .5px; color: var(--text-light); font-weight:700; margin:0 0 12px; }
-  .fr-sentence{ font-family:'Baloo 2', sans-serif; font-size: 20px; font-weight:600; color: var(--text); line-height:1.6; margin: 0 0 18px; text-align: center; }
-
-  .word-spelling-wrap{ display: inline-flex; flex-wrap: wrap; gap: 3px; align-items: center; justify-content: center; vertical-align: middle; margin: 0 2px; }
-  .letter-box{ width: 25px; height: 30px; background: #E5E5E5; border: 2px solid #CCC; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 14px; color: var(--text); text-transform: uppercase; cursor: pointer; user-select: none; transition: all .1s ease; }
-  .letter-box.filled{ background: #EFF8FF; border-color: var(--blue); color: var(--blue-dark); }
-  .letter-box.correct{ background: #EEFAE2; border-color: var(--green); color: var(--green-dark); }
-  .letter-box.wrong{ background: #FFEDED; border-color: var(--red); color: var(--red-dark); }
-
-  .keyboard-grid{ display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; justify-content: center; }
-  .key-btn{ font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 15px; min-width: 32px; height: 36px; padding: 0 6px; background: #FFF; border: 2px solid var(--border); border-bottom-width: 3px; border-radius: 6px; cursor: pointer; color: var(--text); display: flex; align-items: center; justify-content: center; text-transform: uppercase; }
-  .key-btn.used{ opacity: 0.25; background: #E0E0E0; border-color: #CCC; cursor: not-allowed; }
+  /* QUESTION CARD */
+  .question-card{
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    animation: popIn .3s ease;
+  }
+  .instruction{
+    font-size:13px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: var(--text-light);
+    font-weight:700;
+    margin:0 0 8px;
+  }
+  .fr-sentence{
+    font-family:'Baloo 2', sans-serif;
+    font-size: 19px;
+    font-weight:600;
+    color: var(--text);
+    line-height:1.5;
+    margin: 0 0 18px;
+  }
 
   .options-grid{ display:flex; flex-direction:column; gap:10px; }
-  .option-card{ font-family:'Nunito', sans-serif; font-weight:700; font-size: 15px; text-align:center; background: #fff; border: 2px solid var(--border); border-bottom-width:4px; border-radius: var(--radius-md); padding: 13px 16px; color: var(--text); cursor:pointer; }
+  .option-card{
+    font-family:'Nunito', sans-serif;
+    font-weight:700;
+    font-size: 15px;
+    text-align:left;
+    background: #fff;
+    border: 2px solid var(--border);
+    border-bottom-width:4px;
+    border-radius: var(--radius-md);
+    padding: 13px 16px;
+    color: var(--text);
+    cursor:pointer;
+    transition: all .12s ease;
+  }
+  .option-card:hover:not(:disabled){ background:#F7FBFF; }
   .option-card.selected{ border-color: var(--blue); background:#EFF8FF; color: var(--blue-dark); }
   .option-card.correct{ border-color: var(--green); background:#EEFAE2; color: var(--green-dark); }
   .option-card.wrong{ border-color: var(--red); background:#FFEDED; color: var(--red-dark); }
+  .option-card:disabled{ cursor:default; }
 
-  .chip-label{ font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; color: var(--text-light); margin: 14px 0 8px; text-align: center; }
-  .chip-row{ display:flex; flex-wrap:wrap; gap:8px; justify-content: center; }
-  .chip-option{ font-family:'Nunito', sans-serif; font-weight:700; font-size: 14px; background:#fff; border: 2px solid var(--border); border-bottom-width:4px; border-radius: 999px; padding: 8px 16px; cursor:pointer; }
+  /* CHIPS & BLANKS */
+  .chip-label{
+    font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.4px;
+    color: var(--text-light); margin: 14px 0 8px;
+  }
+  .chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip-option{
+    font-family:'Nunito', sans-serif;
+    font-weight:700;
+    font-size: 14px;
+    background:#fff;
+    border: 2px solid var(--border);
+    border-bottom-width:4px;
+    border-radius: 999px;
+    padding: 9px 16px;
+    cursor:pointer;
+    color: var(--text);
+    transition: all .12s ease;
+  }
   .chip-option.selected{ border-color: var(--blue); background:#EFF8FF; color:var(--blue-dark); }
   .chip-option.correct{ border-color: var(--green); background:#EEFAE2; color:var(--green-dark); }
   .chip-option.wrong{ border-color: var(--red); background:#FFEDED; color:var(--red-dark); }
 
-  .blank{ display:inline-block; min-width: 30px; text-align:center; padding: 2px 8px; margin: 0 2px; border-radius: 8px; background: #EEE; color: var(--text-light); font-weight:800; border-bottom: 3px solid #CCC; }
+  .blank{
+    display:inline-block;
+    min-width: 34px;
+    text-align:center;
+    padding: 2px 10px;
+    margin: 0 2px;
+    border-radius: 8px;
+    background: #EEE;
+    color: var(--text-light);
+    font-weight:800;
+    border-bottom: 3px solid #CCC;
+  }
   .blank-filled{ background:#EFF8FF; color: var(--blue-dark); border-bottom-color: var(--blue); }
   .blank-correct{ background:#EEFAE2; color: var(--green-dark); border-bottom-color: var(--green); }
   .blank-wrong{ background:#FFEDED; color: var(--red-dark); border-bottom-color: var(--red); }
 
-  /* RANKING */
-  .ranking-card{ background: var(--card); border: 2px solid var(--border); border-radius: var(--radius-lg); padding: 16px; text-align: center; }
-  .ranking-list{ display: flex; flex-direction: column; gap: 6px; margin-top: 10px; position: relative; }
-  .ranking-item{ display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: var(--radius-md); font-weight: 700; font-size: 14px; transition: transform 0.5s ease; background: #E5E5E5; }
-  .ranking-item.pos-1{ background: #FFD700; color: #5B4500; }
-  .ranking-item.pos-2{ background: #C0C0C0; color: #333; }
-  .ranking-item.pos-3{ background: #F5F5DC; color: #5C4033; }
-  .ranking-item.pos-10{ background: #FF4B4B; color: #FFF; }
+  /* TECLADO E QUADRADOS CINZAS */
+  .word-spelling-wrap{
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+    vertical-align: middle;
+    margin: 0 4px;
+  }
+  .letter-box{
+    width: 32px;
+    height: 38px;
+    background: #E5E5E5;
+    border: 2px solid #CCC;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--text);
+    text-transform: uppercase;
+    cursor: pointer;
+    user-select: none;
+    transition: all .1s ease;
+  }
+  .letter-box.space-box{
+    width: 14px;
+    background: transparent;
+    border: none;
+    cursor: default;
+  }
+  .letter-box.filled{
+    background: #EFF8FF;
+    border-color: var(--blue);
+    color: var(--blue-dark);
+  }
+  .letter-box.correct{
+    background: #EEFAE2;
+    border-color: var(--green);
+    color: var(--green-dark);
+  }
+  .letter-box.wrong{
+    background: #FFEDED;
+    border-color: var(--red);
+    color: var(--red-dark);
+  }
 
-  .rank-pos{ font-family: 'Baloo 2', sans-serif; font-size: 16px; width: 24px; text-align: center; }
-  .rank-avatar{ width: 32px; height: 32px; object-fit: contain; }
-  .rank-name{ flex: 1; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .rank-score{ font-family: 'Baloo 2', sans-serif; font-size: 15px; }
+  .keyboard-grid{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+    justify-content: center;
+  }
+  .key-btn{
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    min-width: 38px;
+    height: 42px;
+    padding: 0 8px;
+    background: #FFF;
+    border: 2px solid var(--border);
+    border-bottom-width: 4px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    transition: all .1s ease;
+  }
+  .key-btn:active:not(:disabled){ transform: translateY(2px); }
+  .key-btn.space-key{ width: auto; padding: 0 16px; text-transform: none; font-size: 13px; }
+  .key-btn.used{
+    opacity: 0.25;
+    background: #E0E0E0;
+    border-color: #CCC;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
 
-  @keyframes popIn{ from{ opacity:0; transform: translateY(8px); } to{ opacity:1; transform: translateY(0); } }
+  @keyframes popIn{
+    from{ opacity:0; transform: translateY(8px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -140,103 +374,295 @@
   <main id="content"></main>
 </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getDatabase, ref, set, get, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyAmD5ectyea8zeTkLurr0O2JjvV_t5jTWE",
-    authDomain: "les-legumes.firebaseapp.com",
-    databaseURL: "https://les-legumes-default-rtdb.firebaseio.com",
-    projectId: "les-legumes",
-    storageBucket: "les-legumes.firebasestorage.app",
-    messagingSenderId: "116016913711",
-    appId: "1:116016913711:web:97dea10d15e6ae760895da",
-    measurementId: "G-BVZKHK3H61"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-
-  window.dbSaveScore = async function(playerData) {
-    try {
-      await set(ref(db, 'leaderboard/' + playerData.id), playerData);
-    } catch(e) {
-      console.error("Erro ao salvar no Realtime Database:", e);
-    }
-  };
-
-  window.dbFetchTop10 = async function() {
-    try {
-      const topQuery = query(ref(db, 'leaderboard'), orderByChild('score'), limitToLast(10));
-      const snapshot = await get(topQuery);
-      if (snapshot.exists()) {
-        const list = [];
-        snapshot.forEach((childSnapshot) => {
-          list.push(childSnapshot.val());
-        });
-        return list.reverse();
-      }
-      return [];
-    } catch(e) {
-      console.error("Erro ao buscar no Realtime Database:", e);
-      return [];
-    }
-  };
-</script>
-
 <script>
-const CHARACTERS = [
-  "AGNÈS", "BÉATRICE", "CHARLOTTE", "CÉCILE", 
-  "JACQUES", "JULIEN", "MARGOT", "MARIE", 
-  "MATHIEU", "MONIQUE", "PHILIPPE", "PIERRE"
-];
+/* =========================================================
+   DADOS DO JOGO — TEMA: LES LÉGUMES
+   ========================================================= */
 
 const level1Data = [
-  { targetSpelling: "de l'ail", frTemplate: "Il met {SPELLING} dans [ 2 ].", frFull: "Il met de l'ail dans l'assiette.", l2Opts: ["l'assiette", "le bol", "la table"], l2Correct: "l'assiette", transCorrect: "Ele coloca alho no prato.", transWrong: ["Ele coloca cebola no prato.", "Ele pega alho no prato."] },
-  { targetSpelling: "du brocoli", frTemplate: "Sophie [ 2 ] manger {SPELLING} très vert.", frFull: "Sophie aime manger du brocoli très vert.", l2Opts: ["aime", "veut", "peut"], l2Correct: "aime", transCorrect: "Sophie gosta de comer brócolis muito verde.", transWrong: ["Sophie quer comer brócolis muito verde.", "Sophie gosta de comprar brócolis verde."] },
-  { targetSpelling: "de la carotte", frTemplate: "[ 2 ] achetons {SPELLING} aujourd'hui.", frFull: "Nous achetons de la carotte aujourd'hui.", l2Opts: ["Nous", "Vous", "Ils"], l2Correct: "Nous", transCorrect: "Nós compramos cenoura hoje.", transWrong: ["Eles compram cenoura hoje.", "Nós comemos cenoura hoje."] },
-  { targetSpelling: "des petits pois", frTemplate: "Je prends {SPELLING} [ 2 ] bons.", frFull: "Je prends des petits pois très bons.", l2Opts: ["très", "trop", "plus"], l2Correct: "très", transCorrect: "Eu pego ervilhas muito boas.", transWrong: ["Eu preparo ervilhas muito boas.", "Eu pego batatas muito boas."] },
-  { targetSpelling: "du persil", frTemplate: "Tu ajoutes {SPELLING} frais [ 2 ] l'assiette.", frFull: "Tu ajoutes du persil frais sur l'assiette.", l2Opts: ["sur", "dans", "sous"], l2Correct: "sur", transCorrect: "Você adiciona salsa fresca sobre o prato.", transWrong: ["Você adiciona salsa fresca dentro do prato.", "Você tira salsa fresca do prato."] },
-  { targetSpelling: "de la tomate", frTemplate: "Charlotte adore [ 2 ] avec {SPELLING}.", frFull: "Charlotte adore cuisiner avec de la tomate.", l2Opts: ["cuisiner", "manger", "jouer"], l2Correct: "cuisiner", transCorrect: "Charlotte adora cozinhar com tomate.", transWrong: ["Charlotte adora comer com tomate.", "Charlotte prefere cozinhar com tomate."] },
-  { targetSpelling: "de l'oignon", frTemplate: "Mon [ 2 ] coupe {SPELLING} ce soir.", frFull: "Mon père coupe de l'oignon ce soir.", l2Opts: ["père", "frère", "oncle"], l2Correct: "père", transCorrect: "Meu pai corta cebola esta noite.", transWrong: ["Meu irmão corta cebola esta noite.", "Meu pai compra cebola esta noite."] },
-  { targetSpelling: "des pommes de terre", frTemplate: "[ 2 ] partagent {SPELLING} chaudes.", frFull: "Ils partagent des pommes de terre chaudes.", l2Opts: ["Ils", "Elles", "Nous"], l2Correct: "Ils", transCorrect: "Eles compartilham batatas quentes.", transWrong: ["Nós compartilhamos batatas quentes.", "Eles cozinham batatas quentes."] },
-  { targetSpelling: "du chou vert", frTemplate: "Mon [ 2 ] aime {SPELLING} l’après-midi.", frFull: "Mon grand-père aime du chou vert l’après-midi.", l2Opts: ["grand-père", "père", "cousin"], l2Correct: "grand-père", transCorrect: "Meu avô come couve de tarde.", transWrong: ["Meu pai come couve de tarde.", "Meu avô cozinha couve de tarde."] },
-  { targetSpelling: "de la courge", frTemplate: "Ma [ 2 ] veut {SPELLING} douce.", frFull: "Ma sœur veut de la courge douce.", l2Opts: ["sœur", "mère", "tante"], l2Correct: "sœur", transCorrect: "Minha irmã quer abóbora doce.", transWrong: ["Minha mãe quer abóbora doce.", "Minha irmã gosta de abóbora doce."] }
+  { 
+    frBlanked: "Lucas mange [ 1 ] ce matin.",
+    partitive: "du", noun: "brocoli", fullTarget: "du brocoli",
+    partitivesOpts: ["du", "de la", "des"],
+    nounsOpts: ["brocoli", "pomme", "salade"],
+    frFull: "Lucas mange du brocoli ce matin.",
+    transCorrect: "Lucas come brócolis esta manhã.",
+    transWrong: ["Lucas come maçã esta manhã.", "Lucas quer brócolis esta manhã."]
+  },
+  { 
+    frBlanked: "Elle préfère [ 1 ] très petit.",
+    partitive: "du", noun: "raisin", fullTarget: "du raisin",
+    partitivesOpts: ["du", "de l'", "des"],
+    nounsOpts: ["raisin", "fraise", "oignon"],
+    frFull: "Elle préfère du raisin très petit.",
+    transCorrect: "Ela prefere uva muito pequena.",
+    transWrong: ["Ela corta uva muito pequena.", "Ela prefere uva muito grande."]
+  },
+  { 
+    frBlanked: "Mon père coupe [ 1 ].",
+    partitive: "de l'", noun: "ail", fullTarget: "de l'ail",
+    partitivesOpts: ["de l'", "du", "de la"],
+    nounsOpts: ["ail", "pain", "beurre"],
+    frFull: "Mon père coupe de l'ail.",
+    transCorrect: "Meu pai corta alho.",
+    transWrong: ["Meu pai cozinha alho.", "Meu irmão corta alho."]
+  },
+  { 
+    frBlanked: "Je mange [ 1 ] cet après-midi.",
+    partitive: "des", noun: "fraises", fullTarget: "des fraises",
+    partitivesOpts: ["des", "du", "de la"],
+    nounsOpts: ["fraises", "tomates", "carottes"],
+    frFull: "Je mange des fraises cet après-midi.",
+    transCorrect: "Eu como morangos esta tarde.",
+    transWrong: ["Eu vendo morangos esta tarde.", "Eu como cenouras esta tarde."]
+  },
+  { 
+    frBlanked: "Maman ajoute [ 1 ] au repas.",
+    partitive: "du", noun: "persil", fullTarget: "du persil",
+    partitivesOpts: ["du", "de la", "des"],
+    nounsOpts: ["persil", "poivre", "sucre"],
+    frFull: "Maman ajoute du persil au repas.",
+    transCorrect: "Mamãe adiciona salsa à refeição.",
+    transWrong: ["Mamãe compra salsa para a refeição.", "Mamãe adiciona sal à refeição."]
+  },
+  { 
+    frBlanked: "Nous coupons [ 1 ].",
+    partitive: "de la", noun: "tomate", fullTarget: "de la tomate",
+    partitivesOpts: ["de la", "du", "des"],
+    nounsOpts: ["tomate", "soupe", "salade"],
+    frFull: "Nous coupons de la tomate.",
+    transCorrect: "Nós cortamos tomate.",
+    transWrong: ["Nós comemos tomate.", "Eles cortam tomate."]
+  },
+  { 
+    frBlanked: "Mon frère veut [ 1 ] aujourd’hui.",
+    partitive: "de l'", noun: "oignon", fullTarget: "de l'oignon",
+    partitivesOpts: ["de l'", "du", "de la"],
+    nounsOpts: ["oignon", "ail", "eau"],
+    frFull: "Mon frère veut de l'oignon aujourd’hui.",
+    transCorrect: "Meu irmão quer cebola hoje.",
+    transWrong: ["Meu irmão gosta de cebola hoje.", "Meu pai quer cebola hoje."]
+  },
+  { 
+    frBlanked: "Nous cuisons [ 1 ].",
+    partitive: "des", noun: "pommes de terre", fullTarget: "des pommes de terre",
+    partitivesOpts: ["des", "du", "de la"],
+    nounsOpts: ["pommes de terre", "carottes", "oignons"],
+    frFull: "Nous cuisons des pommes de terre.",
+    transCorrect: "Nós cozinhamos batatas.",
+    transWrong: ["Nós lavamos batatas.", "Nós cozinhamos cenouras."]
+  },
+  { 
+    frBlanked: "Marie prépare [ 1 ] pour le repas.",
+    partitive: "de la", noun: "pastèque", fullTarget: "de la pastèque",
+    partitivesOpts: ["de la", "du", "des"],
+    nounsOpts: ["pastèque", "soupe", "glace"],
+    frFull: "Marie prépare de la pastèque pour le repas.",
+    transCorrect: "Marie prepara melancia para a refeição.",
+    transWrong: ["Marie come melancia na refeição.", "Marie prepara salada para a refeição."]
+  },
+  { 
+    frBlanked: "Tu veux [ 1 ] froid ?",
+    partitive: "du", noun: "concombre", fullTarget: "du concombre",
+    partitivesOpts: ["du", "de la", "des"],
+    nounsOpts: ["concombre", "piment", "jus"],
+    frFull: "Tu veux du concombre froid ?",
+    transCorrect: "Você quer pepino frio?",
+    transWrong: ["Você tem pepino frio?", "Você quer tomate frio?"]
+  }
 ];
 
 const level2Data = [
-  { spelling1: "du brocoli", spelling2: "avec", frTemplate: "Lucas mange {SP1} le soir [ 2 ] ses amis.", frFull: "Lucas mange du brocoli le soir avec ses amis.", transCorrect: "Lucas come brócolis à noite com seus amigos.", transWrong: ["Lucas come brócolis de manhã com seus amigos.", "Lucas cozinha brócolis à noite com seus amigos."] },
-  { spelling1: "de la carotte", spelling2: "soupe", frTemplate: "Elle prépare {SP1} pour la [ 2 ].", frFull: "Elle prépare de la carotte pour la soupe.", transCorrect: "Ela prepara cenoura para a sopa.", transWrong: ["Ela compra cenoura para a sopa.", "Ela prepara cenoura para a salada."] },
-  { spelling1: "de l'ail", spelling2: "père", frTemplate: "Mon [ 2 ] met {SP1} dans le repas.", frFull: "Mon père met de l'ail dans le repas.", transCorrect: "Meu pai coloca alho na refeição.", transWrong: ["Meu irmão coloca alho na refeição.", "Meu pai corta alho na refeição."] },
-  { spelling1: "des pêches", spelling2: "aujourd’hui", frTemplate: "Je préfère {SP1} au petit-déjeuner [ 2 ].", frFull: "Je préfère des pêches au petit-déjeuner aujourd’hui.", transCorrect: "Eu prefiro pêssegos no café da manhã hoje.", transWrong: ["Eu como pêssegos no café da manhã amanhã.", "Eu prefiro morangos no café da manhã hoje."] },
-  { spelling1: "de la ciboulette", spelling2: "table", frTemplate: "Maman coupe {SP1} sur la [ 2 ].", frFull: "Maman coupe de la ciboulette sur la table.", transCorrect: "Mamãe corta cebolinha sobre a mesa.", transWrong: ["Mamãe lava cebolinha sobre a mesa.", "Mamãe corta cebolinha na cadeira."] },
-  { spelling1: "du concombre", spelling2: "concombre", frTemplate: "Il goute de la tomate rouge avec [ 2 ].", frFull: "Il goute de la tomate rouge avec du concombre.", transCorrect: "Ele experimenta tomate vermelho com pepino.", transWrong: ["Ele compra tomate vermelho com pepino.", "Ele experimenta tomate vermelho com alho."] },
-  { spelling1: "de l'oignon", spelling2: "frère", frTemplate: "Mon [ 2 ] ajoute {SP1} dans la soupe.", frFull: "Mon frère ajoute de l'oignon dans la soupe.", transCorrect: "Meu irmão adiciona cebola na sopa.", transWrong: ["Meu pai adiciona cebola na sopa.", "Meu irmão come cebola na sopa."] },
-  { spelling1: "des pommes de terre", spelling2: "cuisine", frTemplate: "Nous cuisons {SP1} dans la [ 2 ].", frFull: "Nous cuisons des pommes de terre dans la cuisine.", transCorrect: "Nós cozinhamos batatas na cozinha.", transWrong: ["Nós comemos batatas na cozinha.", "Nós cozinhamos batatas na sala."] },
-  { spelling1: "du chou-fleur", spelling2: "village", frTemplate: "Notre grand-père achète {SP1} au grand [ 2 ].", frFull: "Notre grand-père achète du chou-fleur au grand village.", transCorrect: "Nosso avô compra couve-flor na grande vila.", transWrong: ["Nosso pai compra couve-flor na grande vila.", "Nosso avô cultiva couve-flor na grande vila."] },
-  { spelling1: "de l'ananas", spelling2: "elle", frTemplate: "[ 2 ] prend {SP1} pour le petit-déjeuner.", frFull: "Elle prend de l'ananas pour le petit-déjeuner.", transCorrect: "Ela come abacaxi no café da manhã.", transWrong: ["Ele come abacaxi no café da manhã.", "Ela prepara abacaxi no café da manhã."] }
+  {
+    targetSpelling: "de l'ail",
+    frTemplate: "Il met {SPELLING} dans [ 2 ].",
+    frFull: "Il met de l'ail dans l'assiette.",
+    l2Opts: ["l'assiette", "le bol", "la table"],
+    l2Correct: "l'assiette",
+    transCorrect: "Ele coloca alho no prato.",
+    transWrong: ["Ele coloca cebola no prato.", "Ele pega alho no prato."]
+  },
+  {
+    targetSpelling: "du brocoli",
+    frTemplate: "Sophie [ 2 ] manger {SPELLING} très vert.",
+    frFull: "Sophie aime manger du brocoli très vert.",
+    l2Opts: ["aime", "veut", "peut"],
+    l2Correct: "aime",
+    transCorrect: "Sophie gosta de comer brócolis muito verde.",
+    transWrong: ["Sophie quer comer brócolis muito verde.", "Sophie gosta de comprar brócolis verde."]
+  },
+  {
+    targetSpelling: "de la carotte",
+    frTemplate: "[ 2 ] achetons {SPELLING} aujourd'hui.",
+    frFull: "Nous achetons de la carotte aujourd'hui.",
+    l2Opts: ["Nous", "Vous", "Ils"],
+    l2Correct: "Nous",
+    transCorrect: "Nós compramos cenoura hoje.",
+    transWrong: ["Eles compram cenoura hoje.", "Nós comemos cenoura hoje."]
+  },
+  {
+    targetSpelling: "des petits pois",
+    frTemplate: "Je prends {SPELLING} [ 2 ] bons.",
+    frFull: "Je prends des petits pois très bons.",
+    l2Opts: ["très", "trop", "plus"],
+    l2Correct: "très",
+    transCorrect: "Eu pego ervilhas muito boas.",
+    transWrong: ["Eu preparo ervilhas muito boas.", "Eu pego batatas muito boas."]
+  },
+  {
+    targetSpelling: "du persil",
+    frTemplate: "Tu ajoutes {SPELLING} frais [ 2 ] l'assiette.",
+    frFull: "Tu ajoutes du persil frais sur l'assiette.",
+    l2Opts: ["sur", "dans", "sous"],
+    l2Correct: "sur",
+    transCorrect: "Você adiciona salsa fresca sobre o prato.",
+    transWrong: ["Você adiciona salsa fresca dentro do prato.", "Você tira salsa fresca do prato."]
+  },
+  {
+    targetSpelling: "de la tomate",
+    frTemplate: "Charlotte adore [ 2 ] avec {SPELLING}.",
+    frFull: "Charlotte adore cuisiner avec de la tomate.",
+    l2Opts: ["cuisiner", "manger", "jouer"],
+    l2Correct: "cuisiner",
+    transCorrect: "Charlotte adora cozinhar com tomate.",
+    transWrong: ["Charlotte adora comer com tomate.", "Charlotte prefere cozinhar com tomate."]
+  },
+  {
+    targetSpelling: "de l'oignon",
+    frTemplate: "Mon [ 2 ] coupe {SPELLING} ce soir.",
+    frFull: "Mon père coupe de l'oignon ce soir.",
+    l2Opts: ["père", "frère", "oncle"],
+    l2Correct: "père",
+    transCorrect: "Meu pai corta cebola esta noite.",
+    transWrong: ["Meu irmão corta cebola esta noite.", "Meu pai compra cebola esta noite."]
+  },
+  {
+    targetSpelling: "des pommes de terre",
+    frTemplate: "[ 2 ] partagent {SPELLING} chaudes.",
+    frFull: "Ils partagent des pommes de terre chaudes.",
+    l2Opts: ["Ils", "Elles", "Nous"],
+    l2Correct: "Ils",
+    transCorrect: "Eles compartilham batatas quentes.",
+    transWrong: ["Nós compartilhamos batatas quentes.", "Eles cozinham batatas quentes."]
+  },
+  {
+    targetSpelling: "du chou vert",
+    frTemplate: "Mon [ 2 ] aime {SPELLING} l’après-midi.",
+    frFull: "Mon grand-père aime du chou vert l’après-midi.",
+    l2Opts: ["grand-père", "père", "cousin"],
+    l2Correct: "grand-père",
+    transCorrect: "Meu avô come couve de tarde.",
+    transWrong: ["Meu pai come couve de tarde.", "Meu avô cozinha couve de tarde."]
+  },
+  {
+    targetSpelling: "de la courge",
+    frTemplate: "Ma [ 2 ] veut {SPELLING} douce.",
+    frFull: "Ma sœur veut de la courge douce.",
+    l2Opts: ["sœur", "mère", "tante"],
+    l2Correct: "sœur",
+    transCorrect: "Minha irmã quer abóbora doce.",
+    transWrong: ["Minha mãe quer abóbora doce.", "Minha irmã gosta de abóbora doce."]
+  }
 ];
 
+const level3Data = [
+  {
+    spelling1: "du brocoli",
+    spelling2: "avec",
+    frTemplate: "Lucas mange {SP1} le soir [ 2 ] ses amis.",
+    frFull: "Lucas mange du brocoli le soir avec ses amis.",
+    transCorrect: "Lucas come brócolis à noite com seus amigos.",
+    transWrong: ["Lucas come brócolis de manhã com seus amigos.", "Lucas cozinha brócolis à noite com seus amigos."]
+  },
+  {
+    spelling1: "de la carotte",
+    spelling2: "soupe",
+    frTemplate: "Elle prépare {SP1} pour la [ 2 ].",
+    frFull: "Elle prépare de la carotte pour la soupe.",
+    transCorrect: "Ela prepara cenoura para a sopa.",
+    transWrong: ["Ela compra cenoura para a sopa.", "Ela prepara cenoura para a salada."]
+  },
+  {
+    spelling1: "de l'ail",
+    spelling2: "père",
+    frTemplate: "Mon [ 2 ] met {SP1} dans le repas.",
+    frFull: "Mon père met de l'ail dans le repas.",
+    transCorrect: "Meu pai coloca alho na refeição.",
+    transWrong: ["Meu irmão coloca alho na refeição.", "Meu pai corta alho na refeição."]
+  },
+  {
+    spelling1: "des pêches",
+    spelling2: "aujourd’hui",
+    frTemplate: "Je préfère {SP1} au petit-déjeuner [ 2 ].",
+    frFull: "Je préfère des pêches au petit-déjeuner aujourd’hui.",
+    transCorrect: "Eu prefiro pêssegos no café da manhã hoje.",
+    transWrong: ["Eu como pêssegos no café da manhã amanhã.", "Eu prefiro morangos no café da manhã hoje."]
+  },
+  {
+    spelling1: "de la ciboulette",
+    spelling2: "table",
+    frTemplate: "Maman coupe {SP1} sur la [ 2 ].",
+    frFull: "Maman coupe de la ciboulette sur la table.",
+    transCorrect: "Mamãe corta cebolinha sobre a mesa.",
+    transWrong: ["Mamãe lava cebolinha sobre a mesa.", "Mamãe corta cebolinha na cadeira."]
+  },
+  {
+    spelling1: "du concombre",
+    spelling2: "concombre",
+    frTemplate: "Il goute de la tomate rouge avec [ 2 ].",
+    frFull: "Il goute de la tomate rouge avec du concombre.",
+    transCorrect: "Ele experimenta tomate vermelho com pepino.",
+    transWrong: ["Ele compra tomate vermelho com pepino.", "Ele experimenta tomate vermelho com alho."]
+  },
+  {
+    spelling1: "de l'oignon",
+    spelling2: "frère",
+    frTemplate: "Mon [ 2 ] ajoute {SP1} dans la soupe.",
+    frFull: "Mon frère ajoute de l'oignon dans la soupe.",
+    transCorrect: "Meu irmão adiciona cebola na sopa.",
+    transWrong: ["Meu pai adiciona cebola na sopa.", "Meu irmão come cebola na sopa."]
+  },
+  {
+    spelling1: "des pommes de terre",
+    spelling2: "cuisine",
+    frTemplate: "Nous cuisons {SP1} dans la [ 2 ].",
+    frFull: "Nous cuisons des pommes de terre dans la cuisine.",
+    transCorrect: "Nós cozinhamos batatas na cozinha.",
+    transWrong: ["Nós comemos batatas na cozinha.", "Nós cozinhamos batatas na sala."]
+  },
+  {
+    spelling1: "du chou-fleur",
+    spelling2: "village",
+    frTemplate: "Notre grand-père achète {SP1} au grand [ 2 ].",
+    frFull: "Notre grand-père achète du chou-fleur au grand village.",
+    transCorrect: "Nosso avô compra couve-flor na grande vila.",
+    transWrong: ["Nosso pai compra couve-flor na grande vila.", "Nosso avô cultiva couve-flor na grande vila."]
+  },
+  {
+    spelling1: "de l'ananas",
+    spelling2: "elle",
+    frTemplate: "[ 2 ] prend {SP1} pour le petit-déjeuner.",
+    frFull: "Elle prend de l'ananas pour le petit-déjeuner.",
+    transCorrect: "Ela come abacaxi no café da manhã.",
+    transWrong: ["Ele come abacaxi no café da manhã.", "Ela prepara abacaxi no café da manhã."]
+  }
+];
+
+/* =========================================================
+   ESTADO GLOBAL DO JOGO
+   ========================================================= */
 const state = {
-  screen: 'login',
-  loginMode: 'pin',
-  studentPin: '',
-  playerName: '',
-  selectedChar: 'AGNÈS',
-  selectedSkin: '00',
-  playerId: '',
+  screen: 'home',
   level: 1,
   qIndex: 0,
   totalScore: 0,
-  levelScores: {1:0, 2:0},
+  levelScores: {1:0, 2:0, 3:0},
   l1: null,
   l2: null,
-  previousRanking: []
+  l3: null
 };
 
-let qrScannerInstance = null;
-
+// Utilidades
 function shuffle(arr){
   const a = [...arr];
   for(let i=a.length-1; i>0; i--){
@@ -256,109 +682,52 @@ function formatScore(n){
   return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
 }
 
+/* HELPER PARA GERAR BANCO DE TECLAS COM IDs ÚNICOS */
 function buildKeyBank(targetStr){
-  let chars = targetStr.replace(/ /g, '').split('');
+  let chars = targetStr.split('');
   chars.push(getRandomLetter());
   chars = shuffle(chars);
-  return chars.map((char, index) => ({ id: index, char: char }));
+  return chars.map((char, index) => ({
+    id: index,
+    char: char
+  }));
 }
 
-function getAvatarPath(charName, skin){
-  const suffix = skin === '01' ? '01.png' : '.png';
-  return `./assets/${charName}${suffix}`;
-}
+/* SONOPLASTIA */
+const SOUND_FILES = {
+  click: 'click.mp3',
+  ok: 'ok.mp3',
+  falha: 'falha.mp3',
+  level: 'level.mp3',
+  levelfail: 'levelfail.mp3',
+  win: 'win01.mp3',
+  losing: 'losing.mp3'
+};
 
-const SOUND_FILES = { click: 'click.mp3', ok: 'ok.mp3', falha: 'falha.mp3', level: 'level.mp3', levelfail: 'levelfail.mp3', win: 'win01.mp3', losing: 'losing.mp3' };
 function playSound(name){
-  try{ const src = SOUND_FILES[name]; if(!src) return; new Audio(src).play().catch(()=>{}); }catch(e){}
+  try{
+    const src = SOUND_FILES[name];
+    if(!src) return;
+    const audio = new Audio(src);
+    audio.play().catch(()=>{});
+  }catch(e){}
 }
 
-/* FLUXO DE TELAS DO LOGIN */
-function submitStudentLogin(pinCode){
-  const pin = pinCode || document.getElementById('student-pin-input')?.value.trim();
-  if(!pin){ alert("Por favor, digite ou escaneie um PIN válido."); return; }
-  
-  playSound('click');
-  stopQrScanner();
-  state.studentPin = pin;
-  state.playerId = 'student_' + pin;
-  state.screen = 'home';
-  render();
-}
-
-function setLoginTab(mode){
-  playSound('click');
-  state.loginMode = mode;
-  render();
-  if(mode === 'qr'){ startQrScanner(); } else { stopQrScanner(); }
-}
-
-function startQrScanner(){
-  setTimeout(() => {
-    const qrDiv = document.getElementById('qr-reader');
-    if(!qrDiv) return;
-    qrScannerInstance = new Html5Qrcode("qr-reader");
-    qrScannerInstance.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: 200 },
-      (decodedText) => {
-        submitStudentLogin(decodedText);
-      },
-      () => {}
-    ).catch(err => {
-      console.warn("Erro ao iniciar câmera:", err);
-    });
-  }, 100);
-}
-
-function stopQrScanner(){
-  if(qrScannerInstance){
-    qrScannerInstance.stop().then(() => {
-      qrScannerInstance.clear();
-      qrScannerInstance = null;
-    }).catch(() => {});
-  }
-}
+function levelMaxPts(lvl){ return lvl===1?20:(lvl===2?30:50); }
+function levelPct(lvl){ return (state.levelScores[lvl]/levelMaxPts(lvl))*100; }
 
 function startGame(){
-  const input = document.getElementById('player-name-input');
-  if(input && input.value.trim() !== ''){ state.playerName = input.value.trim(); }
-  else { state.playerName = "Aluno " + state.studentPin; }
-  
   playSound('click');
   state.screen='game'; state.level=1; state.qIndex=0;
-  state.totalScore=0; state.levelScores={1:0, 2:0};
+  state.totalScore=0; state.levelScores={1:0,2:0,3:0};
   setupCurrentQuestion();
   render();
 }
 
 function setupCurrentQuestion(){
   if(state.level===1) setupLevel1Question(state.qIndex);
-  else setupLevel2Question(state.qIndex);
-}
-
-async function showRankingScreen(){
-  if(window.dbSaveScore){
-    await window.dbSaveScore({
-      id: state.playerId,
-      name: state.playerName,
-      avatar: getAvatarPath(state.selectedChar, state.selectedSkin),
-      score: state.totalScore
-    });
-  }
-  
-  let currentTop10 = [];
-  if(window.dbFetchTop10){ currentTop10 = await window.dbFetchTop10(); }
-  if(currentTop10.length === 0){
-    currentTop10 = [
-      { id: state.playerId, name: state.playerName, avatar: getAvatarPath(state.selectedChar, state.selectedSkin), score: state.totalScore },
-      { id: 'bot1', name: 'Jean', avatar: getAvatarPath('JULIEN', '00'), score: 350 },
-      { id: 'bot2', name: 'Claire', avatar: getAvatarPath('CHARLOTTE', '00'), score: 280 }
-    ].sort((a,b) => b.score - a.score);
-  }
-
-  state.screen = 'ranking';
-  renderRanking(currentTop10);
+  else if(state.level===2) setupLevel2Question(state.qIndex);
+  else setupLevel3Question(state.qIndex);
 }
 
 function nextQuestion(){
@@ -366,7 +735,7 @@ function nextQuestion(){
   state.qIndex++;
   if(state.qIndex>=10){
     state.screen='levelComplete';
-    playSound((state.levelScores[state.level] >= (state.level===1?280:420)) ? 'level' : 'levelfail');
+    playSound(levelPct(state.level)>=70 ? 'level' : 'levelfail');
     render();
     return;
   }
@@ -384,26 +753,28 @@ function startNextLevel(){
 function goFinal(){
   playSound('click');
   state.screen='final';
-  playSound(state.totalScore>=750 ? 'win' : 'losing');
+  playSound(state.totalScore>=75 ? 'win' : 'losing');
   render();
 }
 
 function resetGame(){
   playSound('click');
-  state.screen='login'; state.level=1; state.qIndex=0;
-  state.totalScore=0; state.levelScores={1:0, 2:0};
+  state.screen='home'; state.level=1; state.qIndex=0;
+  state.totalScore=0; state.levelScores={1:0,2:0,3:0};
   render();
 }
 
-/* RENDERIZADORES DE TELA */
+/* =========================================================
+   RENDER PRINCIPAL
+   ========================================================= */
 function render(){
   renderTopbar();
   const content = document.getElementById('content');
-  if(state.screen==='login'){ content.innerHTML = loginTemplate(); }
-  else if(state.screen==='home'){ content.innerHTML = homeTemplate(); }
+  if(state.screen==='home'){ content.innerHTML = homeTemplate(); }
   else if(state.screen==='game'){
     if(state.level===1) renderLevel1();
-    else renderLevel2();
+    else if(state.level===2) renderLevel2();
+    else renderLevel3();
   }
   else if(state.screen==='levelComplete'){ content.innerHTML = levelCompleteTemplate(); }
   else if(state.screen==='final'){ content.innerHTML = finalTemplate(); }
@@ -414,97 +785,257 @@ function renderTopbar(){
   const scoreTxt = formatScore(state.totalScore);
   let progressPct = 0;
   let levelLabel = 'GALOLINGO — LES LÉGUMES';
-  
-  if(state.screen==='game' || state.screen==='ranking'){
+  if(state.screen==='game'){
     const completed = (state.level-1)*10 + state.qIndex;
-    progressPct = Math.round((completed/20)*100);
+    progressPct = Math.round((completed/30)*100);
     levelLabel = `Nível ${state.level} · Questão ${state.qIndex+1}/10`;
   } else if(state.screen==='levelComplete'){
-    progressPct = Math.round((state.level*10/20)*100);
+    progressPct = Math.round((state.level*10/30)*100);
     levelLabel = `Nível ${state.level} concluído`;
   } else if(state.screen==='final'){
     progressPct = 100;
     levelLabel = 'Jogo concluído';
+  } else {
+    levelLabel = 'Pronto para começar?';
   }
-  
   bar.innerHTML = `
     <div class="topbar-row">
       <span class="level-label">${levelLabel}</span>
-      <span class="score-badge">🏆 ${scoreTxt}<span class="score-max">/1000</span></span>
+      <span class="score-badge">🏆 ${scoreTxt}<span class="score-max">/100</span></span>
     </div>
     <div class="progress-track"><div class="progress-fill" style="width:${progressPct}%"></div></div>
   `;
 }
 
-function loginTemplate(){
-  return `
-    <div class="home-card">
-      <h1>Área do Aluno</h1>
-      <p class="instruction">Escolha a forma de acesso</p>
-      
-      <div class="tab-row">
-        <button class="tab-btn ${state.loginMode==='pin'?'active':''}" onclick="setLoginTab('pin')">PIN da Turma</button>
-        <button class="tab-btn ${state.loginMode==='qr'?'active':''}" onclick="setLoginTab('qr')">QR Code</button>
-      </div>
-
-      ${state.loginMode === 'pin' ? `
-        <input type="number" id="student-pin-input" class="input-pin" placeholder="0000" maxlength="6">
-      ` : `
-        <div id="qr-reader" class="qr-reader-box"></div>
-      `}
-    </div>
-    <div class="footer-space"></div>
-    ${state.loginMode === 'pin' ? `
-      <button class="btn btn-block btn-blue" onclick="submitStudentLogin()">Entrar</button>
-    ` : ''}
-  `;
-}
-
 function homeTemplate(){
-  const charOptions = CHARACTERS.map(c => `
-    <div class="char-card ${state.selectedChar === c ? 'selected' : ''}" onclick="selectChar('${c}')">
-      <img src="${getAvatarPath(c, state.selectedSkin)}" alt="${c}">
-      <span class="char-name">${c}</span>
-    </div>
-  `).join('');
-
   return `
     <div class="home-card">
-      <h1>Perfil do Aluno</h1>
-      <p class="home-sub">PIN de acesso: <strong>#${state.studentPin}</strong></p>
-      
-      <input type="text" id="player-name-input" class="input-name" placeholder="Seu Nome / Apelido" value="${state.playerName}">
-      
-      <p class="chip-label">Selecione o Personagem</p>
-      <div class="char-grid">${charOptions}</div>
-
-      <p class="chip-label">Visual (Skin)</p>
-      <div class="skin-selector">
-        <div class="skin-btn ${state.selectedSkin==='00'?'selected':''}" onclick="selectSkin('00')">
-          <img src="${getAvatarPath(state.selectedChar, '00')}">
-        </div>
-        <div class="skin-btn ${state.selectedSkin==='01'?'selected':''}" onclick="selectSkin('01')">
-          <img src="${getAvatarPath(state.selectedChar, '01')}">
-        </div>
+      <div class="mascot">🐓</div>
+      <h1>GALOLINGO</h1>
+      <p class="home-sub">Tema: <strong>Les légumes</strong>. Complete os 3 níveis e conquiste até <strong>100 pontos</strong>!</p>
+      <div class="level-preview">
+        <div class="level-chip"><span class="chip-num">1</span> Seleção de Partitivo e Substantivo <span class="chip-pts">20 pts</span></div>
+        <div class="level-chip"><span class="chip-num">2</span> Montar Letra por Letra + Lacuna <span class="chip-pts">30 pts</span></div>
+        <div class="level-chip"><span class="chip-num">3</span> Montar Duas Lacunas Letra por Letra <span class="chip-pts">50 pts</span></div>
       </div>
     </div>
     <div class="footer-space"></div>
-    <button class="btn btn-block" onclick="startGame()">Iniciar Aula</button>
+    <button class="btn btn-block" onclick="startGame()">Começar</button>
   `;
 }
 
-function selectChar(c){ state.selectedChar = c; render(); }
-function selectSkin(s){ state.selectedSkin = s; render(); }
+function levelCompleteTemplate(){
+  const lvl = state.level;
+  const max = levelMaxPts(lvl);
+  const earned = state.levelScores[lvl];
+  const pct = levelPct(lvl);
+  const passed = pct>=70;
+  const mascot = passed ? '🐓😄' : '🐓😟';
+  const moodMsg = passed
+    ? 'Muito bem! Esse galo está orgulhoso do seu progresso!'
+    : 'Esse galo ficou meio apreensivo... vamos revisar mais um pouco!';
+  const isLast = lvl===3;
+  return `
+    <div class="home-card">
+      <div class="mascot">${mascot}</div>
+      <h1>Nível ${lvl} concluído!</h1>
+      <p class="home-sub">Você fez <strong>${formatScore(earned)} / ${max}</strong> pontos neste nível (${Math.round(pct)}%).</p>
+      <p class="home-sub">${moodMsg}</p>
+      <p class="home-sub">Pontuação total: <strong>${formatScore(state.totalScore)} / 100</strong></p>
+    </div>
+    <div class="footer-space"></div>
+    <button class="btn btn-block" onclick="${isLast ? 'goFinal()' : 'startNextLevel()'}">
+      ${isLast ? 'Ver Resultado Final' : 'Continuar para o Nível '+(lvl+1)}
+    </button>
+  `;
+}
 
-/* MONTAR QUADRADOS DE LETRAS */
-function renderSpellingBoxes(target, selectedItems, checked, isCorrect, levelNum, fieldNum){
+function finalTemplate(){
+  const total = state.totalScore;
+  const passed = total>=75;
+  const mascot = passed ? '🐓🥳' : '🐓😭';
+  const msg = passed
+    ? 'Parabéns! Esse galo está cantando de alegria — você mandou muito bem em francês! 🎉'
+    : 'Esse galo ficou super triste... capriche mais um pouco na próxima tentativa e tenha mais dedicação nos estudos! 💪';
+  return `
+    <div class="home-card">
+      <div class="mascot">${mascot}</div>
+      <h1>Resultado Final</h1>
+      <p class="final-score">${formatScore(total)}<span> / 100</span></p>
+      <p class="home-sub">${msg}</p>
+      <div class="breakdown">
+        <div class="breakdown-row"><span>Nível 1 — Múltipla Escolha</span><span>${formatScore(state.levelScores[1])} / 20</span></div>
+        <div class="breakdown-row"><span>Nível 2 — Letra por Letra + Lacuna</span><span>${formatScore(state.levelScores[2])} / 30</span></div>
+        <div class="breakdown-row"><span>Nível 3 — Montagem Dupla</span><span>${formatScore(state.levelScores[3])} / 50</span></div>
+      </div>
+    </div>
+    <div class="footer-space"></div>
+    <button class="btn btn-block" onclick="resetGame()">Jogar Novamente</button>
+  `;
+}
+
+/* =========================================================
+   NÍVEL 1 — LÓGICA E INTERFACE (20 PONTOS)
+   ========================================================= */
+function setupLevel1Question(idx){
+  const q = level1Data[idx];
+  state.l1 = {
+    step: 'A',
+    partSelected: null,
+    nounSelected: null,
+    partOpts: shuffle(q.partitivesOpts),
+    nounOpts: shuffle(q.nounsOpts),
+    checkedA: false,
+    trOptions: shuffle([{text:q.transCorrect, correct:true}, ...q.transWrong.map(w=>({text:w, correct:false}))]),
+    trSelected: null,
+    checkedB: false
+  };
+}
+
+function renderLevel1(){
+  const q = level1Data[state.qIndex];
+  const s = state.l1;
+  const content = document.getElementById('content');
+
+  if(s.step==='A'){
+    let blankTxt = "[ ___ ___ ]";
+    if(s.partSelected!==null || s.nounSelected!==null){
+      const p = s.partSelected!==null ? s.partOpts[s.partSelected] : "___";
+      const n = s.nounSelected!==null ? s.nounOpts[s.nounSelected] : "___";
+      blankTxt = `${p} ${n}`;
+    }
+    
+    let spanCls = "blank";
+    if(s.checkedA){
+      const isPartOk = s.partOpts[s.partSelected] === q.partitive;
+      const isNounOk = s.nounOpts[s.nounSelected] === q.noun;
+      spanCls += (isPartOk && isNounOk) ? " blank-correct" : " blank-wrong";
+    } else if(s.partSelected!==null && s.nounSelected!==null){
+      spanCls += " blank-filled";
+    }
+
+    const sentence = q.frBlanked.replace('[ 1 ]', `<span class="${spanCls}">${blankTxt}</span>`);
+
+    const pBtns = s.partOpts.map((w,i)=>{
+      let cls='chip-option';
+      if(s.checkedA){ if(w===q.partitive) cls+=' correct'; else if(i===s.partSelected) cls+=' wrong'; }
+      else if(i===s.partSelected){ cls+=' selected'; }
+      return `<button class="${cls}" ${s.checkedA?'disabled':''} onclick="selectL1Part(${i})">${w}</button>`;
+    }).join('');
+
+    const nBtns = s.nounOpts.map((w,i)=>{
+      let cls='chip-option';
+      if(s.checkedA){ if(w===q.noun) cls+=' correct'; else if(i===s.nounSelected) cls+=' wrong'; }
+      else if(i===s.nounSelected){ cls+=' selected'; }
+      return `<button class="${cls}" ${s.checkedA?'disabled':''} onclick="selectL1Noun(${i})">${w}</button>`;
+    }).join('');
+
+    const btnLabel = s.checkedA ? 'Continuar' : 'Verificar Lacuna';
+    const btnOnclick = s.checkedA ? 'advanceL1Step()' : 'checkL1Lacuna()';
+    const btnDisabled = !s.checkedA && (s.partSelected===null || s.nounSelected===null);
+
+    content.innerHTML = `
+      <div class="question-card">
+        <p class="instruction">Escolha o partitivo e o substantivo</p>
+        <p class="fr-sentence">${sentence}</p>
+        <p class="chip-label">Partitivo</p>
+        <div class="chip-row">${pBtns}</div>
+        <p class="chip-label">Substantivo</p>
+        <div class="chip-row">${nBtns}</div>
+      </div>
+      <div class="footer-space"></div>
+      <button class="btn btn-block" ${btnDisabled?'disabled':''} onclick="${btnOnclick}">${btnLabel}</button>
+    `;
+  } else {
+    const trbtns = s.trOptions.map((o,i)=>{
+      let cls='option-card';
+      if(s.checkedB){ if(o.correct) cls+=' correct'; else if(i===s.trSelected) cls+=' wrong'; }
+      else if(i===s.trSelected){ cls+=' selected'; }
+      return `<button class="${cls}" ${s.checkedB?'disabled':''} onclick="selectL1Translation(${i})">${o.text}</button>`;
+    }).join('');
+
+    const btnLabel = s.checkedB ? 'Próxima Questão' : 'Verificar Tradução';
+    const btnOnclick = s.checkedB ? 'nextQuestion()' : 'checkL1Translation()';
+    const btnDisabled = !s.checkedB && s.trSelected===null;
+
+    content.innerHTML = `
+      <div class="question-card">
+        <p class="instruction">Escolha a tradução correta</p>
+        <p class="fr-sentence">${q.frFull}</p>
+        <div class="options-grid">${trbtns}</div>
+      </div>
+      <div class="footer-space"></div>
+      <button class="btn btn-block" ${btnDisabled?'disabled':''} onclick="${btnOnclick}">${btnLabel}</button>
+    `;
+  }
+}
+
+function selectL1Part(i){ playSound('click'); state.l1.partSelected=i; renderLevel1(); }
+function selectL1Noun(i){ playSound('click'); state.l1.nounSelected=i; renderLevel1(); }
+
+function checkL1Lacuna(){
+  const q = level1Data[state.qIndex];
+  const s = state.l1;
+  s.checkedA = true;
+  const isPartOk = s.partOpts[s.partSelected] === q.partitive;
+  const isNounOk = s.nounOpts[s.nounSelected] === q.noun;
+
+  let pts = 0;
+  if(isPartOk) pts += 0.5;
+  if(isNounOk) pts += 0.5;
+  state.levelScores[1] += pts;
+  state.totalScore += pts;
+
+  if(isPartOk && isNounOk) playSound('ok'); else playSound('falha');
+  renderLevel1();
+}
+
+function advanceL1Step(){ playSound('click'); state.l1.step='B'; renderLevel1(); }
+
+function selectL1Translation(i){ playSound('click'); state.l1.trSelected=i; renderLevel1(); }
+
+function checkL1Translation(){
+  const s = state.l1;
+  s.checkedB = true;
+  const isCorrect = s.trOptions[s.trSelected].correct;
+  if(isCorrect){
+    playSound('ok');
+    state.levelScores[1] += 1.0;
+    state.totalScore += 1.0;
+  } else {
+    playSound('falha');
+  }
+  renderLevel1();
+}
+
+/* =========================================================
+   NÍVEL 2 — LÓGICA E INTERFACE (30 PONTOS)
+   ========================================================= */
+function setupLevel2Question(idx){
+  const q = level2Data[idx];
+  state.l2 = {
+    step: 'A',
+    selectedItems: [], // array de objetos { id, char }
+    keyBank: buildKeyBank(q.targetSpelling),
+    l2Opts: shuffle(q.l2Opts),
+    l2Selected: null,
+    checkedA: false,
+    trOptions: shuffle([{text:q.transCorrect, correct:true}, ...q.transWrong.map(w=>({text:w, correct:false}))]),
+    trSelected: null,
+    checkedB: false
+  };
+}
+
+// Função para renderizar os quadrados de montagem
+function renderSpellingBoxesInteractive(target, selectedItems, checked, isCorrect, levelNum, fieldNum){
   let html = '<span class="word-spelling-wrap">';
   let itemIdx = 0;
 
   for(let i=0; i<target.length; i++){
     const charTarget = target[i];
+    
     if(charTarget === ' '){
-      html += `<span style="width: 8px;"></span>`;
+      html += `<span class="letter-box space-box"></span>`;
     } else {
       const selectedObj = selectedItems[itemIdx];
       let cls = "letter-box";
@@ -527,20 +1058,9 @@ function renderSpellingBoxes(target, selectedItems, checked, isCorrect, levelNum
   return html;
 }
 
-/* NÍVEL 1 */
-function setupLevel1Question(idx){
-  const q = level1Data[idx];
-  state.l1 = {
-    step: 'A', selectedItems: [], keyBank: buildKeyBank(q.targetSpelling),
-    l2Opts: shuffle(q.l2Opts), l2Selected: null, checkedA: false,
-    trOptions: shuffle([{text:q.transCorrect, correct:true}, ...q.transWrong.map(w=>({text:w, correct:false}))]),
-    trSelected: null, checkedB: false
-  };
-}
-
-function renderLevel1(){
-  const q = level1Data[state.qIndex];
-  const s = state.l1;
+function renderLevel2(){
+  const q = level2Data[state.qIndex];
+  const s = state.l2;
   const content = document.getElementById('content');
 
   if(s.step==='A'){
@@ -549,8 +1069,9 @@ function renderLevel1(){
     const expectedLettersOnly = target.replace(/ /g, '');
     const isSpellingOk = (typedString.toLowerCase() === expectedLettersOnly.toLowerCase());
 
-    const spellingHtml = renderSpellingBoxes(target, s.selectedItems, s.checkedA, isSpellingOk, 1, 1);
+    const spellingHtml = renderSpellingBoxesInteractive(target, s.selectedItems, s.checkedA, isSpellingOk, 2, 1);
 
+    // Render da frase com as lacunas
     let l2Span = "[ ___ ]";
     if(s.l2Selected !== null) l2Span = s.l2Opts[s.l2Selected];
     let l2Cls = "blank";
@@ -560,150 +1081,41 @@ function renderLevel1(){
 
     const sentence = q.frTemplate.replace('{SPELLING}', spellingHtml).replace('[ 2 ]', `<span class="${l2Cls}">${l2Span}</span>`);
 
+    // Teclado com desativação visual dos itens usados
     const keyBtns = s.keyBank.map((item) => {
       const isUsed = s.selectedItems.some(sel => sel.id === item.id);
-      let cls = 'key-btn' + (isUsed ? ' used' : '');
-      const clickHandler = (!s.checkedA && !isUsed) ? `onclick="pickTile(1, 1, ${item.id})"` : '';
-      return `<button class="${cls}" ${s.checkedA || isUsed ? 'disabled' : ''} ${clickHandler}>${item.char}</button>`;
+      let cls = 'key-btn';
+      if(isUsed) cls += ' used';
+      if(item.char === ' ') cls += ' space-key';
+
+      const clickHandler = (!s.checkedA && !isUsed) ? `onclick="pickTile(2, 1, ${item.id})"` : '';
+      const displayLabel = item.char === ' ' ? 'espaço' : item.char;
+
+      return `<button class="${cls}" ${s.checkedA || isUsed ? 'disabled' : ''} ${clickHandler}>${displayLabel}</button>`;
     }).join('');
 
+    // Botões de opção da lacuna 2
     const l2Btns = s.l2Opts.map((w,i)=>{
       let cls='chip-option';
       if(s.checkedA){ if(w===q.l2Correct) cls+=' correct'; else if(i===s.l2Selected) cls+=' wrong'; }
       else if(i===s.l2Selected){ cls+=' selected'; }
-      return `<button class="${cls}" ${s.checkedA?'disabled':''} onclick="selectL1Opt(${i})">${w}</button>`;
+      return `<button class="${cls}" ${s.checkedA?'disabled':''} onclick="selectL2Opt(${i})">${w}</button>`;
     }).join('');
 
     const btnLabel = s.checkedA ? 'Continuar' : 'Verificar Respostas';
-    const btnOnclick = s.checkedA ? 'advanceL1Step()' : 'checkL1StepA()';
+    const btnOnclick = s.checkedA ? 'advanceL2Step()' : 'checkL2StepA()';
     const btnDisabled = !s.checkedA && (s.selectedItems.length < expectedLettersOnly.length || s.l2Selected===null);
 
     content.innerHTML = `
       <div class="question-card">
-        <p class="instruction">Monte as letras e escolha a palavra</p>
+        <p class="instruction">Monte o partitivo+substantivo e escolha a 2ª palavra</p>
         <p class="fr-sentence">${sentence}</p>
-        <p class="chip-label">Teclado de Letras</p>
+        
+        <p class="chip-label">Teclado de Letras (Lacuna 1)</p>
         <div class="keyboard-grid">${keyBtns}</div>
-        <p class="chip-label">Opções da Lacuna</p>
+
+        <p class="chip-label">Opções da Lacuna 2</p>
         <div class="chip-row">${l2Btns}</div>
-      </div>
-      <div class="footer-space"></div>
-      <button class="btn btn-block" ${btnDisabled?'disabled':''} onclick="${btnOnclick}">${btnLabel}</button>
-    `;
-  } else {
-    const trbtns = s.trOptions.map((o,i)=>{
-      let cls='option-card';
-      if(s.checkedB){ if(o.correct) cls+=' correct'; else if(i===s.trSelected) cls+=' wrong'; }
-      else if(i===s.trSelected){ cls+=' selected'; }
-      return `<button class="${cls}" ${s.checkedB?'disabled':''} onclick="selectL1Translation(${i})">${o.text}</button>`;
-    }).join('');
-
-    const btnLabel = s.checkedB ? 'Ver Ranking da Rodada' : 'Verificar Tradução';
-    const btnOnclick = s.checkedB ? 'showRankingScreen()' : 'checkL1Translation()';
-    const btnDisabled = !s.checkedB && s.trSelected===null;
-
-    content.innerHTML = `
-      <div class="question-card">
-        <p class="instruction">Escolha a tradução correta</p>
-        <p class="fr-sentence">${q.frFull}</p>
-        <div class="options-grid">${trbtns}</div>
-      </div>
-      <div class="footer-space"></div>
-      <button class="btn btn-block" ${btnDisabled?'disabled':''} onclick="${btnOnclick}">${btnLabel}</button>
-    `;
-  }
-}
-
-function selectL1Opt(i){ playSound('click'); state.l1.l2Selected=i; renderLevel1(); }
-
-function checkL1StepA(){
-  const q = level1Data[state.qIndex];
-  const s = state.l1;
-  s.checkedA = true;
-
-  const typedString = s.selectedItems.map(item => item.char).join('');
-  const expectedLettersOnly = q.targetSpelling.replace(/ /g, '');
-  const isSpellOk = (typedString.toLowerCase() === expectedLettersOnly.toLowerCase());
-  const isL2Ok = (s.l2Opts[s.l2Selected] === q.l2Correct);
-
-  let pts = 0;
-  if(isSpellOk) pts += 25;
-  if(isL2Ok) pts += 15;
-
-  state.levelScores[1] += pts;
-  state.totalScore += pts;
-
-  if(isSpellOk && isL2Ok) playSound('ok'); else playSound('falha');
-  renderLevel1();
-}
-
-function advanceL1Step(){ playSound('click'); state.l1.step='B'; renderLevel1(); }
-function selectL1Translation(i){ playSound('click'); state.l1.trSelected=i; renderLevel1(); }
-
-function checkL1Translation(){
-  const s = state.l1;
-  s.checkedB = true;
-  if(s.trOptions[s.trSelected].correct){ playSound('ok'); } else { playSound('falha'); }
-  renderLevel1();
-}
-
-/* NÍVEL 2 */
-function setupLevel2Question(idx){
-  const q = level2Data[idx];
-  state.l2 = {
-    step: 'A', activeField: 1, selectedItems1: [], selectedItems2: [],
-    keyBank1: buildKeyBank(q.spelling1), keyBank2: buildKeyBank(q.spelling2),
-    checkedA: false,
-    trOptions: shuffle([{text:q.transCorrect, correct:true}, ...q.transWrong.map(w=>({text:w, correct:false}))]),
-    trSelected: null, checkedB: false
-  };
-}
-
-function renderLevel2(){
-  const q = level2Data[state.qIndex];
-  const s = state.l2;
-  const content = document.getElementById('content');
-
-  if(s.step==='A'){
-    const typed1 = s.selectedItems1.map(i => i.char).join('');
-    const typed2 = s.selectedItems2.map(i => i.char).join('');
-    const expected1 = q.spelling1.replace(/ /g, '');
-    const expected2 = q.spelling2.replace(/ /g, '');
-
-    const isOk1 = (typed1.toLowerCase() === expected1.toLowerCase());
-    const isOk2 = (typed2.toLowerCase() === expected2.toLowerCase());
-
-    const sp1Html = renderSpellingBoxes(q.spelling1, s.selectedItems1, s.checkedA, isOk1, 2, 1);
-    const sp2Html = renderSpellingBoxes(q.spelling2, s.selectedItems2, s.checkedA, isOk2, 2, 2);
-
-    const sentence = q.frTemplate.replace('{SP1}', sp1Html).replace('[ 2 ]', sp2Html);
-
-    const currentBank = s.activeField===1 ? s.keyBank1 : s.keyBank2;
-    const currentSelected = s.activeField===1 ? s.selectedItems1 : s.selectedItems2;
-
-    const keyBtns = currentBank.map((item) => {
-      const isUsed = currentSelected.some(sel => sel.id === item.id);
-      let cls = 'key-btn' + (isUsed ? ' used' : '');
-      const clickHandler = (!s.checkedA && !isUsed) ? `onclick="pickTile(2, ${s.activeField}, ${item.id})"` : '';
-      return `<button class="${cls}" ${s.checkedA || isUsed ? 'disabled' : ''} ${clickHandler}>${item.char}</button>`;
-    }).join('');
-
-    const btnLabel = s.checkedA ? 'Continuar' : 'Verificar Frases';
-    const btnOnclick = s.checkedA ? 'advanceL2Step()' : 'checkL2StepA()';
-    const btnDisabled = !s.checkedA && (s.selectedItems1.length < expected1.length || s.selectedItems2.length < expected2.length);
-
-    content.innerHTML = `
-      <div class="question-card">
-        <p class="instruction">Monte as duas lacunas letra por letra</p>
-        <p class="fr-sentence">${sentence}</p>
-
-        <div class="chip-row">
-          <button class="chip-option ${s.activeField===1?'selected':''}" ${s.checkedA?'disabled':''} onclick="switchL2Field(1)">Lacuna 1</button>
-          <button class="chip-option ${s.activeField===2?'selected':''}" ${s.checkedA?'disabled':''} onclick="switchL2Field(2)">Lacuna 2</button>
-        </div>
-
-        <p class="chip-label">Teclado da Lacuna ${s.activeField}</p>
-        <div class="keyboard-grid">${keyBtns}</div>
       </div>
       <div class="footer-space"></div>
       <button class="btn btn-block" ${btnDisabled?'disabled':''} onclick="${btnOnclick}">${btnLabel}</button>
@@ -716,8 +1128,8 @@ function renderLevel2(){
       return `<button class="${cls}" ${s.checkedB?'disabled':''} onclick="selectL2Translation(${i})">${o.text}</button>`;
     }).join('');
 
-    const btnLabel = s.checkedB ? 'Ver Ranking da Rodada' : 'Verificar Tradução';
-    const btnOnclick = s.checkedB ? 'showRankingScreen()' : 'checkL2Translation()';
+    const btnLabel = s.checkedB ? 'Próxima Questão' : 'Verificar Tradução';
+    const btnOnclick = s.checkedB ? 'nextQuestion()' : 'checkL2Translation()';
     const btnDisabled = !s.checkedB && s.trSelected===null;
 
     content.innerHTML = `
@@ -732,175 +1144,245 @@ function renderLevel2(){
   }
 }
 
-function switchL2Field(f){ playSound('click'); state.l2.activeField = f; renderLevel2(); }
+function selectL2Opt(i){ playSound('click'); state.l2.l2Selected=i; renderLevel2(); }
 
 function checkL2StepA(){
   const q = level2Data[state.qIndex];
   const s = state.l2;
   s.checkedA = true;
 
-  const typed1 = s.selectedItems1.map(i => i.char).join('');
-  const typed2 = s.selectedItems2.map(i => i.char).join('');
-  const isOk1 = (typed1.toLowerCase() === q.spelling1.replace(/ /g, '').toLowerCase());
-  const isOk2 = (typed2.toLowerCase() === q.spelling2.replace(/ /g, '').toLowerCase());
+  const typedString = s.selectedItems.map(item => item.char).join('');
+  const expectedLettersOnly = q.targetSpelling.replace(/ /g, '');
+  const isSpellOk = (typedString.toLowerCase() === expectedLettersOnly.toLowerCase());
+  const isL2Ok = (s.l2Opts[s.l2Selected] === q.l2Correct);
 
   let pts = 0;
-  if(isOk1) pts += 22.5;
-  if(isOk2) pts += 22.5;
+  if(isSpellOk) pts += 1.0;
+  if(isL2Ok) pts += 1.0;
 
   state.levelScores[2] += pts;
   state.totalScore += pts;
 
-  if(isOk1 && isOk2) playSound('ok'); else playSound('falha');
+  if(isSpellOk && isL2Ok) playSound('ok'); else playSound('falha');
   renderLevel2();
 }
 
 function advanceL2Step(){ playSound('click'); state.l2.step='B'; renderLevel2(); }
+
 function selectL2Translation(i){ playSound('click'); state.l2.trSelected=i; renderLevel2(); }
 
 function checkL2Translation(){
   const s = state.l2;
   s.checkedB = true;
-  if(s.trOptions[s.trSelected].correct){
+  const isCorrect = s.trOptions[s.trSelected].correct;
+  if(isCorrect){
     playSound('ok');
-    state.levelScores[2] += 15;
-    state.totalScore += 15;
-  } else { playSound('falha'); }
+    state.levelScores[2] += 1.0;
+    state.totalScore += 1.0;
+  } else {
+    playSound('falha');
+  }
   renderLevel2();
 }
 
-/* ACOES TECLADO */
+/* =========================================================
+   NÍVEL 3 — LÓGICA E INTERFACE (50 PONTOS)
+   ========================================================= */
+function setupLevel3Question(idx){
+  const q = level3Data[idx];
+
+  state.l3 = {
+    step: 'A',
+    activeField: 1, // 1 ou 2
+    selectedItems1: [],
+    selectedItems2: [],
+    keyBank1: buildKeyBank(q.spelling1),
+    keyBank2: buildKeyBank(q.spelling2),
+    checkedA: false,
+    trOptions: shuffle([{text:q.transCorrect, correct:true}, ...q.transWrong.map(w=>({text:w, correct:false}))]),
+    trSelected: null,
+    checkedB: false
+  };
+}
+
+function renderLevel3(){
+  const q = level3Data[state.qIndex];
+  const s = state.l3;
+  const content = document.getElementById('content');
+
+  if(s.step==='A'){
+    const typed1 = s.selectedItems1.map(i => i.char).join('');
+    const typed2 = s.selectedItems2.map(i => i.char).join('');
+
+    const expected1 = q.spelling1.replace(/ /g, '');
+    const expected2 = q.spelling2.replace(/ /g, '');
+
+    const isSpell1Ok = (typed1.toLowerCase() === expected1.toLowerCase());
+    const isSpell2Ok = (typed2.toLowerCase() === expected2.toLowerCase());
+
+    const sp1Html = renderSpellingBoxesInteractive(q.spelling1, s.selectedItems1, s.checkedA, isSpell1Ok, 3, 1);
+    const sp2Html = renderSpellingBoxesInteractive(q.spelling2, s.selectedItems2, s.checkedA, isSpell2Ok, 3, 2);
+
+    const sentence = q.frTemplate.replace('{SP1}', sp1Html).replace('[ 2 ]', sp2Html);
+
+    const active1Cls = s.activeField===1 ? 'selected' : '';
+    const active2Cls = s.activeField===2 ? 'selected' : '';
+
+    const currentBank = s.activeField===1 ? s.keyBank1 : s.keyBank2;
+    const currentSelected = s.activeField===1 ? s.selectedItems1 : s.selectedItems2;
+
+    const keyBtns = currentBank.map((item) => {
+      const isUsed = currentSelected.some(sel => sel.id === item.id);
+      let cls = 'key-btn';
+      if(isUsed) cls += ' used';
+      if(item.char === ' ') cls += ' space-key';
+
+      const clickHandler = (!s.checkedA && !isUsed) ? `onclick="pickTile(3, ${s.activeField}, ${item.id})"` : '';
+      const displayLabel = item.char === ' ' ? 'espaço' : item.char;
+
+      return `<button class="${cls}" ${s.checkedA || isUsed ? 'disabled' : ''} ${clickHandler}>${displayLabel}</button>`;
+    }).join('');
+
+    const btnLabel = s.checkedA ? 'Continuar' : 'Verificar Frases';
+    const btnOnclick = s.checkedA ? 'advanceL3Step()' : 'checkL3StepA()';
+    const btnDisabled = !s.checkedA && (s.selectedItems1.length < expected1.length || s.selectedItems2.length < expected2.length);
+
+    content.innerHTML = `
+      <div class="question-card">
+        <p class="instruction">Monte ambas as lacunas letra por letra</p>
+        <p class="fr-sentence">${sentence}</p>
+
+        <p class="chip-label">Selecione qual lacuna deseja preencher:</p>
+        <div class="chip-row">
+          <button class="chip-option ${active1Cls}" ${s.checkedA?'disabled':''} onclick="switchL3Field(1)">Lacuna 1</button>
+          <button class="chip-option ${active2Cls}" ${s.checkedA?'disabled':''} onclick="switchL3Field(2)">Lacuna 2</button>
+        </div>
+
+        <p class="chip-label">Teclado de Letras (Lacuna ${s.activeField})</p>
+        <div class="keyboard-grid">${keyBtns}</div>
+      </div>
+      <div class="footer-space"></div>
+      <button class="btn btn-block" ${btnDisabled?'disabled':''} onclick="${btnOnclick}">${btnLabel}</button>
+    `;
+  } else {
+    const trbtns = s.trOptions.map((o,i)=>{
+      let cls='option-card';
+      if(s.checkedB){ if(o.correct) cls+=' correct'; else if(i===s.trSelected) cls+=' wrong'; }
+      else if(i===s.trSelected){ cls+=' selected'; }
+      return `<button class="${cls}" ${s.checkedB?'disabled':''} onclick="selectL3Translation(${i})">${o.text}</button>`;
+    }).join('');
+
+    const btnLabel = s.checkedB ? 'Próxima Questão' : 'Verificar Tradução';
+    const btnOnclick = s.checkedB ? 'nextQuestion()' : 'checkL3Translation()';
+    const btnDisabled = !s.checkedB && s.trSelected===null;
+
+    content.innerHTML = `
+      <div class="question-card">
+        <p class="instruction">Escolha a tradução correta</p>
+        <p class="fr-sentence">${q.frFull}</p>
+        <div class="options-grid">${trbtns}</div>
+      </div>
+      <div class="footer-space"></div>
+      <button class="btn btn-block" ${btnDisabled?'disabled':''} onclick="${btnOnclick}">${btnLabel}</button>
+    `;
+  }
+}
+
+function switchL3Field(f){
+  playSound('click');
+  state.l3.activeField = f;
+  renderLevel3();
+}
+
+/* =========================================================
+   FUNÇÕES GERAIS DE INTERAÇÃO COM AS LETRAS DO TECLADO
+   ========================================================= */
+
+// Escolher uma letra do banco
 function pickTile(levelNum, fieldNum, itemId){
   playSound('click');
-  const s = levelNum === 1 ? state.l1 : state.l2;
-  if(levelNum === 1){
+  if(levelNum === 2){
+    const s = state.l2;
     const item = s.keyBank.find(k => k.id === itemId);
     if(item && !s.selectedItems.some(i => i.id === itemId)){
       s.selectedItems.push(item);
-      renderLevel1();
+      renderLevel2();
     }
-  } else {
+  } else if(levelNum === 3){
+    const s = state.l3;
     const bank = fieldNum === 1 ? s.keyBank1 : s.keyBank2;
     const selectedList = fieldNum === 1 ? s.selectedItems1 : s.selectedItems2;
     const item = bank.find(k => k.id === itemId);
     if(item && !selectedList.some(i => i.id === itemId)){
       selectedList.push(item);
-      renderLevel2();
+      renderLevel3();
     }
   }
 }
 
+// Remover uma letra clicando diretamente na caixa cinza (preserva a ordem das demais)
 function removeTile(levelNum, fieldNum, itemIndex){
   playSound('click');
-  const s = levelNum === 1 ? state.l1 : state.l2;
-  if(!s.checkedA){
-    if(levelNum === 1){
+  if(levelNum === 2){
+    const s = state.l2;
+    if(!s.checkedA){
       s.selectedItems.splice(itemIndex, 1);
-      renderLevel1();
-    } else {
+      renderLevel2();
+    }
+  } else if(levelNum === 3){
+    const s = state.l3;
+    if(!s.checkedA){
       const selectedList = fieldNum === 1 ? s.selectedItems1 : s.selectedItems2;
       selectedList.splice(itemIndex, 1);
-      renderLevel2();
+      renderLevel3();
     }
   }
 }
 
-/* RANKING FLIP */
-function renderRanking(currentTop10){
-  const content = document.getElementById('content');
-  const medals = { 1: "🥇", 2: "🥈", 3: "🥉" };
+function checkL3StepA(){
+  const q = level3Data[state.qIndex];
+  const s = state.l3;
+  s.checkedA = true;
 
-  const itemsHtml = currentTop10.map((item, index) => {
-    const pos = index + 1;
-    let posClass = `pos-${pos}`;
-    if(pos > 3 && pos < 10) posClass = 'pos-mid';
-    if(pos === 10) posClass = 'pos-10';
+  const typed1 = s.selectedItems1.map(i => i.char).join('');
+  const typed2 = s.selectedItems2.map(i => i.char).join('');
 
-    const medal = medals[pos] || `${pos}º`;
+  const expected1 = q.spelling1.replace(/ /g, '');
+  const expected2 = q.spelling2.replace(/ /g, '');
 
-    return `
-      <div class="ranking-item ${posClass}" data-id="${item.id}" id="rank-item-${item.id}">
-        <span class="rank-pos">${medal}</span>
-        <img class="rank-avatar" src="${item.avatar}" alt="avatar">
-        <span class="rank-name">${item.name}</span>
-        <span class="rank-score">${formatScore(item.score)} pts</span>
-      </div>
-    `;
-  }).join('');
+  const isOk1 = (typed1.toLowerCase() === expected1.toLowerCase());
+  const isOk2 = (typed2.toLowerCase() === expected2.toLowerCase());
 
-  content.innerHTML = `
-    <div class="ranking-card">
-      <h2>Ranking Top 10</h2>
-      <p class="instruction">Movimentação da rodada</p>
-      <div class="ranking-list" id="ranking-container">${itemsHtml}</div>
-    </div>
-    <div class="footer-space"></div>
-    <button class="btn btn-block" onclick="nextQuestion()">Próxima Frase</button>
-  `;
+  let pts = 0;
+  if(isOk1) pts += 1.75;
+  if(isOk2) pts += 1.75;
 
-  requestAnimationFrame(() => {
-    const container = document.getElementById('ranking-container');
-    if(!container) return;
+  state.levelScores[3] += pts;
+  state.totalScore += pts;
 
-    currentTop10.forEach((item) => {
-      const el = document.getElementById(`rank-item-${item.id}`);
-      const oldPos = state.previousRanking.findIndex(p => p.id === item.id);
-      const newPos = currentTop10.findIndex(p => p.id === item.id);
-
-      if(oldPos !== -1 && oldPos !== newPos && el){
-        const deltaY = (oldPos - newPos) * 48;
-        el.style.transform = `translateY(${deltaY}px)`;
-        el.style.transition = 'none';
-
-        setTimeout(() => {
-          el.style.transition = 'transform 0.8s ease-in-out';
-          el.style.transform = 'translateY(0)';
-        }, 50);
-      }
-    });
-
-    state.previousRanking = [...currentTop10];
-  });
+  if(isOk1 && isOk2) playSound('ok'); else playSound('falha');
+  renderLevel3();
 }
 
-function levelCompleteTemplate(){
-  const lvl = state.level;
-  const earned = state.levelScores[lvl];
-  const max = lvl === 1 ? 400 : 600;
-  const isLast = lvl === 2;
+function advanceL3Step(){ playSound('click'); state.l3.step='B'; renderLevel3(); }
 
-  return `
-    <div class="home-card">
-      <div class="mascot">🐓😄</div>
-      <h1>Nível ${lvl} Concluído!</h1>
-      <p class="home-sub">Pontuação do Nível: <strong>${formatScore(earned)} / ${max}</strong></p>
-      <p class="home-sub">Pontuação Total: <strong>${formatScore(state.totalScore)} / 1000</strong></p>
-    </div>
-    <div class="footer-space"></div>
-    <button class="btn btn-block" onclick="${isLast ? 'goFinal()' : 'startNextLevel()'}">
-      ${isLast ? 'Ver Resultado Final' : 'Ir para o Nível ' + (lvl + 1)}
-    </button>
-  `;
+function selectL3Translation(i){ playSound('click'); state.l3.trSelected=i; renderLevel3(); }
+
+function checkL3Translation(){
+  const s = state.l3;
+  s.checkedB = true;
+  const isCorrect = s.trOptions[s.trSelected].correct;
+  if(isCorrect){
+    playSound('ok');
+    state.levelScores[3] += 1.5;
+    state.totalScore += 1.5;
+  } else {
+    playSound('falha');
+  }
+  renderLevel3();
 }
 
-function finalTemplate(){
-  return `
-    <div class="home-card">
-      <div class="mascot">🐓🥳</div>
-      <h1>Resultado Final</h1>
-      <p class="final-score" style="font-size:40px; color:var(--green-dark); font-weight:800;">
-        ${formatScore(state.totalScore)}<span> / 1000</span>
-      </p>
-      <div class="breakdown" style="width:100%;">
-        <div style="display:flex; justify-content:space-between; padding:8px;"><span>Nível 1</span><span>${formatScore(state.levelScores[1])} / 400</span></div>
-        <div style="display:flex; justify-content:space-between; padding:8px;"><span>Nível 2</span><span>${formatScore(state.levelScores[2])} / 600</span></div>
-      </div>
-    </div>
-    <div class="footer-space"></div>
-    <button class="btn btn-block" onclick="resetGame()">Jogar Novamente</button>
-  `;
-}
-
+// Inicialização
 window.onload = () => { render(); };
 </script>
 </body>
